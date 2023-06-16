@@ -3,7 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: "/qrbidv/",
+  base: "/bidv-qr/",
   title: "BIDV QR",
   description: "BIDV QR",
   themeConfig: {
