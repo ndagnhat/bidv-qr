@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "BIDV QR"
-  text: "BIDV QR"
+  text: "QR code generator"
   tagline: My great project tagline
   actions:
     - theme: brand

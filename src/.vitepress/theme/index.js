@@ -1,6 +1,7 @@
 // https://vitepress.dev/guide/custom-theme
 import { h } from 'vue'
 import Theme from 'vitepress/theme'
+import QRPaymentPage from './components/QRPaymentPage.vue'
 import './styles/style.css'
 import './styles/vp-page.css'
 
@@ -12,6 +13,6 @@ export default {
     })
   },
   enhanceApp({ app, router, siteData }) {
-    // ...
+    app.component('QRPaymentPage', QRPaymentPage);
   }
 }

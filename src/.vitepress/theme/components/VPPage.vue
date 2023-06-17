@@ -16,6 +16,7 @@ const { hasSidebar, hasAside, leftAside } = useSidebar()
 </template>
 
 <style scoped>
+
 .VPPage {
   padding: 24px;
   width: 100%;

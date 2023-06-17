@@ -8,7 +8,7 @@
  * -------------------------------------------------------------------------- */
 
  :root {
-  --vp-c-brand: rgba(0, 107, 104, 1);;
+  --vp-c-brand: rgb(0, 82, 78);
   --vp-c-brand-light: rgba(0, 107, 104, 0.8);
   --vp-c-brand-lighter: rgba(0, 107, 104, 0.6);
   --vp-c-brand-lightest: rgba(0, 107, 104, 0.4);
@@ -18,8 +18,7 @@
 }
 
 .dark {
-  --vp-c-bg: #000000;
-  --vp-c-gutter: rgba(82, 82, 89, 0.68);
+  --vp-c-brand: #019a80;
 }
 
 /**
@@ -46,14 +45,17 @@
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: -webkit-linear-gradient(
     120deg,
-    #bd34fe 30%,
-    #41d1ff
+    rgb(255, 198, 47) 10%,
+    #019a80
+    
   );
 
   --vp-home-hero-image-background-image: linear-gradient(
     -45deg,
-    #bd34fe 50%,
-    #47caff 50%
+    rgb(0, 82, 78) 50%,
+    rgb(255, 198, 47) 50%
+
+    linear-gradient(135deg, #9f772e 0%, #f2c15f 39%, #ffcc67 53%, #f2c15f 67%, #9f772e 100%);
   );
   --vp-home-hero-image-filter: blur(40px);
 }
