@@ -130,7 +130,7 @@ function selectFrame1() {
 
 function downloadAsFile() {
     const link = document.createElement('a')
-    link.href = QRFrame.toDataURL('png')
+    link.href = QRFrame.toDataURL({format: 'pgn', multiplier: (1 / QRFrame.getZoom())})
     link.download = 'qrcode.png'
     document.body.appendChild(link)
     link.click()
