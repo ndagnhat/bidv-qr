@@ -174,7 +174,7 @@ function downloadAsFile() {
                 <label for="vehicle3">Hiển thị thông tin tài khoản</label>
             </div>
             <div class="vp-field-button">
-                <button class="vp-button medium brand" @click="downloadAsFile">Create QR Code</button>
+                <button class="vp-button medium brand" @click="createQRCode">Create QR Code</button>
             </div>
         </div>
         <div class="qroutput">
@@ -192,7 +192,7 @@ function downloadAsFile() {
                     <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
                 </div>
                 <div class="vp-field-button">
-                    <button class="vp-button medium brand" @click="saveImage">Save QR Code</button>
+                    <button class="vp-button medium brand" @click="downloadAsFile">Save QR Code</button>
                 </div>
             </div>
         </div>
