@@ -107,6 +107,31 @@ function selectNoFrame() {
     QRFrame.renderAll();
 }
 
+function selectFrame1() {
+    frame.value = "noframe";
+    QRFrame.setBackgroundImage(null);
+    QRFrame.setBackgroundColor("#ffffff");
+
+    const qrviewWidth = qrview.value.clientWidth;
+    QRFrame.setZoom(qrviewWidth / 1000);
+    QRFrame.setWidth(qrviewWidth);
+    QRFrame.setHeight(qrviewWidth);
+    
+    QRCode.left = 200;
+    QRCode.top = 100;
+    QRCode.scaleX = 600 / QRCode.width;
+    QRCode.scaleY = 600 / QRCode.height;
+
+    QRBank.top = 750;
+    QRBank.viewportCenterH();
+    QRNumber.top = 825;
+    QRNumber.viewportCenterH();
+    QRName.top = 900;
+    QRName.viewportCenterH();
+
+    QRFrame.renderAll();
+}
+
 </script>
 
 <template>
@@ -157,10 +182,6 @@ function selectNoFrame() {
                 <div class="row">
                     <div class="thumbnail" style="background-color: white; width: 40px;" :class="{ 'active': frame == 'noframe' }" @click="selectNoFrame" />
                     <img src="/frame1.png" alt="Frame 1" class="thumbnail" :class="{ 'active': frame == 'frame1' }" @click="selectFrame1" />
-                    <img src="/frame2.png" alt="Frame 2" class="thumbnail" :class="{ 'active': frame == 'frame2' }" @click="selectFrame2"/>
-                    <img src="/frame3.png" alt="Frame 3" class="thumbnail" :class="{ 'active': frame == 'frame3' }" @click="selectFrame3"/>
-                    <img src="/frame4.png" alt="Frame 4" class="thumbnail" :class="{ 'active': frame == 'frame4' }" @click="selectFrame4"/>
-                    <img src="/frame5.png" alt="Frame 5" class="thumbnail" :class="{ 'active': frame == 'frame5' }" @click="selectFrame5"/>
                     <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
                 </div>
                 <div class="vp-field-button">
