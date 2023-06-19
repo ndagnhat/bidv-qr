@@ -26,16 +26,19 @@ onMounted(() => {
     QRFrame.setZoom(qrviewWidth / 1000);
     QRFrame.setWidth(qrviewWidth);
     QRFrame.setHeight(qrviewWidth);
-    QRBank = new fabric.Text('', { });
-    QRNumber = new fabric.Text('', { });
-    QRName = new fabric.Text('', { });
-    QRFrame.add(QRBank);
-    QRFrame.add(QRNumber);
-    QRFrame.add(QRName);
+    QRBank = new fabric.Text('', {  });
+    QRNumber = new fabric.Text('', {  });
+    QRName = new fabric.Text('', {  });
     fabric.Image.fromURL(withBase("/qrdefault.png"), function (img) {
-        //img.visible = false;
         QRCode = img;
+        QRCode.left = 50;
+        QRCode.top = 50;
+        QRCode.scaleX = 900 / img.width;
+        QRCode.scaleY = 900 / img.height;
         QRFrame.add(QRCode);
+        QRFrame.add(QRBank);
+        QRFrame.add(QRNumber);
+        QRFrame.add(QRName);
         QRFrame.renderAll();
         selectNoFrame();
     });
@@ -65,21 +68,15 @@ function createQRCode() {
         QRCode.top = top;
         QRCode.scaleX = width / QRCode.width;
         QRCode.scaleY = height / QRCode.height;
+
+        const bankName = listBanks.value.find(bank => bank.code = bankCode.value).name;
+        QRBank.text = bankName;
+        QRNumber.text = accountNo.value;
+        QRName.text = accountName.value;
         QRFrame.renderAll();
     }, {
         crossOrigin: 'anonymous'
     });
-    
-    // const bankName = listBanks.value.find(bank => bank.code = bankCode.value).name;
-    //     QRBank.text = bankName;
-    //     QRFrame.renderAll();
-
-    // if(displayInfor.value) {
-
-    //     QRBank.text = "abc";
-    //     QRBank.left = 500 - (QRBank.getScaledWidth() / 2);
-    //     QRFrame.renderAll();
-    // }
 }
 
 function selectNoFrame() {
@@ -91,19 +88,18 @@ function selectNoFrame() {
     QRFrame.setZoom(qrviewWidth / 1000);
     QRFrame.setWidth(qrviewWidth);
     QRFrame.setHeight(qrviewWidth);
-    
+
     QRCode.left = 200;
     QRCode.top = 100;
     QRCode.scaleX = 600 / QRCode.width;
     QRCode.scaleY = 600 / QRCode.height;
 
     QRBank.top = 750;
-    QRBank.viewportCenterH();
+    QRBank.left = 100;
     QRNumber.top = 825;
-    QRNumber.viewportCenterH();
+    QRNumber.left = 100;
     QRName.top = 900;
-    QRName.viewportCenterH();
-
+    QRName.left = 100;
     QRFrame.renderAll();
 }
 
@@ -116,7 +112,7 @@ function selectFrame1() {
     QRFrame.setZoom(qrviewWidth / 1000);
     QRFrame.setWidth(qrviewWidth);
     QRFrame.setHeight(qrviewWidth);
-    
+
     QRCode.left = 200;
     QRCode.top = 100;
     QRCode.scaleX = 600 / QRCode.width;
@@ -130,6 +126,15 @@ function selectFrame1() {
     QRName.viewportCenterH();
 
     QRFrame.renderAll();
+}
+
+function downloadAsFile() {
+    const link = document.createElement('a')
+    link.href = QRFrame.toDataURL('png')
+    link.download = 'qrcode.png'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
 }
 
 </script>
@@ -169,7 +174,7 @@ function selectFrame1() {
                 <label for="vehicle3">Hiển thị thông tin tài khoản</label>
             </div>
             <div class="vp-field-button">
-                <button class="vp-button medium brand" @click="createQRCode">Create QR Code</button>
+                <button class="vp-button medium brand" @click="downloadAsFile">Create QR Code</button>
             </div>
         </div>
         <div class="qroutput">
@@ -180,8 +185,10 @@ function selectFrame1() {
             <div class="container">
                 <h6>Select a frame</h6>
                 <div class="row">
-                    <div class="thumbnail" style="background-color: white; width: 40px;" :class="{ 'active': frame == 'noframe' }" @click="selectNoFrame" />
-                    <img src="/frame1.png" alt="Frame 1" class="thumbnail" :class="{ 'active': frame == 'frame1' }" @click="selectFrame1" />
+                    <div class="thumbnail" style="background-color: white; width: 40px;"
+                        :class="{ 'active': frame == 'noframe' }" @click="selectNoFrame" />
+                    <img src="/frame1.png" alt="Frame 1" class="thumbnail" :class="{ 'active': frame == 'frame1' }"
+                        @click="selectFrame1" />
                     <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
                 </div>
                 <div class="vp-field-button">
