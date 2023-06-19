@@ -2,6 +2,7 @@
 
 import { ref, onMounted } from 'vue';
 import { fabric } from 'fabric';
+import { withBase } from 'vitepress'
 
 const qrview = ref(null);
 var QRFrame = null;
@@ -28,7 +29,7 @@ onMounted(() => {
     QRFrame.setZoom(qrviewWidth / 1000);
     QRFrame.setWidth(qrviewWidth);
     QRFrame.setHeight(qrviewWidth);
-    fabric.Image.fromURL("/qrdefault.png", function (img) {
+    fabric.Image.fromURL(withBase("/qrdefault.png"), function (img) {
         QRCode = img;
         QRCode.left = 200;
         QRCode.top = 100;
