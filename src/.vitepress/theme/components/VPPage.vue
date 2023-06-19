@@ -8,7 +8,7 @@ const { hasSidebar, hasAside, leftAside } = useSidebar()
 <template>
   <div class="VPPage" :class="{ 'has-sidebar': hasSidebar }">
     <slot name="page-top" />
-    <div class="container">
+    <div class="page-main">
       <Content class="vp-page" />
     </div>
     <slot name="page-bottom" />
@@ -18,18 +18,11 @@ const { hasSidebar, hasAside, leftAside } = useSidebar()
 <style scoped>
 
 .VPPage {
-  padding: 24px;
   width: 100%;
 }
 
-.VPPage:not(.has-sidebar) .container {
+.VPPage:not(.has-sidebar) .page-main {
   margin: 0 auto;
   max-width: calc(var(--vp-layout-max-width) - 64px);
-}
-
-@media (min-width: 768px) {
-  .VPPage {
-    padding: 32px;
-  }
 }
 </style>

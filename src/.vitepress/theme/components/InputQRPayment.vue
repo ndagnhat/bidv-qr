@@ -30,6 +30,10 @@
             <label for="txtDescription" class="vp-field-label">Description</label>
             <input id="txtDescription" type="text" placeholder="Enter amount" class="vp-field">
         </div>
+        <div class="vp-field-group">
+            <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+            <label for="vehicle3">Hiển thị thông tin tài khoản</label><br>
+        </div>
         <button class="VPButton medium brand">Create QR Code</button>
     </div>
 </template>
