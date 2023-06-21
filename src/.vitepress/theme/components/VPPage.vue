@@ -18,11 +18,17 @@ const { hasSidebar, hasAside, leftAside } = useSidebar()
 <style scoped>
 
 .VPPage {
-  width: 100%;
+  padding: 24px;
 }
 
 .VPPage:not(.has-sidebar) .page-main {
   margin: 0 auto;
-  max-width: calc(var(--vp-layout-max-width) - 64px);
+  max-width: 1125px;
+}
+
+@media (min-width: 768px) {
+  .VPPage {
+    padding: 32px;
+  }
 }
 </style>
