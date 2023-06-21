@@ -14,11 +14,11 @@ const listBanks = ref([]);
 
 function createQRData() {
     let qrdata = "https://img.vietqr.io/image/" + selBankId.value + "-" + txtAccountNo.value + "-xyzWuLb.png?amount=" + txtAmount.value + "&addInfo=" + txtDescription.value + "&accountName=" + txtAccountName.value;
-    let bankName = listBanks.value.find(bank => bank.code = selBankId.value).name;
+    let bank = listBanks.value.find(bank => bank.code == selBankId.value);
     let data = {
         type: 'payment',
         qr: qrdata,
-        bank: bankName,
+        bank: bank.name,
         accountNo: txtAccountNo.value,
         accountName: txtAccountName.value
     }
