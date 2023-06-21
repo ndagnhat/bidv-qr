@@ -1,75 +1,134 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 
-const emit = defineEmits(['selectedQrType'])
+const selBankId = ref('BIDV');
+const txtAccountNo = ref('');
+const txtAccountName = ref('');
+const txtAmount = ref('');
+const txtDescription = ref('');
+const ckbAccept = ref(true);
 
+const emit = defineEmits(['createQRData']);
+
+const listBanks = ref([]);
+
+function createQRData() {
+    let qrdata = "https://img.vietqr.io/image/" + selBankId.value + "-" + txtAccountNo.value + "-xyzWuLb.png?amount=" + txtAmount.value + "&addInfo=" + txtDescription.value + "&accountName=" + txtAccountName.value;
+    let bankName = listBanks.value.find(bank => bank.code = selBankId.value).name;
+    let data = {
+        type: 'payment',
+        qr: qrdata,
+        bank: bankName,
+        accountNo: txtAccountNo.value,
+        accountName: txtAccountName.value
+    }
+    emit('createQRData', data);
+}
+
+onMounted(() => {
+    // load bank data
+    fetch('https://api.vietqr.io/v2/banks')
+        .then(response => response.json())
+        .then(data => {
+            if (data.code == '00') {
+                listBanks.value = data.data;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+});
 </script>
 
 <template>
-    <div class="vp-form">
-        <div class="vp-field-group">
-            <label for="selBank" class="vp-field-label">Choose a bank</label>
-            <select id="selBank" name="banks" class="vp-field">
-                <option value="BIDV">BIDV</option>
-                <option value="TCB">Techcombank</option>
-                <option value="VCB">Vietcombank</option>
-                <option value="TPB">TPBank</option>
+    <div class="w3-cell-row">
+        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+            <label class="label">Banks:</label>
+        </div>
+        <div class="w3-container w3-cell">
+            <select name="banks" v-model="selBankId" class="w3-input w3-border w3-hover-border w3-round-large">
+                <option v-for="bank in listBanks" :value="bank.code">
+                    {{ bank.name }}
+                </option>
             </select>
         </div>
+    </div>
 
-        <div class="vp-field-group">
-            <label for="txtAccountNumber" class="vp-field-label">Account number</label>
-            <input id="txtAccountNumber" type="text" placeholder="Enter account number" class="vp-field">
+    <div class="w3-cell-row">
+        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+            <label class="label">Account number:</label>
         </div>
-        <div class="vp-field-group">
-            <label for="txtAccountName" class="vp-field-label">Account Name</label>
-            <input id="txtAccountName" type="text" placeholder="Enter account name" class="vp-field">
+        <div class="w3-container w3-cell">
+            <input type="text" v-model="txtAccountNo" class="w3-input w3-border w3-hover-border w3-round-large" />
         </div>
-        <div class="vp-field-group">
-            <label for="txtAmount" class="vp-field-label">Amount</label>
-            <input id="txtAmount" type="text" placeholder="Enter amount" class="vp-field">
+    </div>
+
+    <div class="w3-cell-row">
+        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+            <label class="label">Account Name:</label>
         </div>
-        <div class="vp-field-group">
-            <label for="txtDescription" class="vp-field-label">Description</label>
-            <input id="txtDescription" type="text" placeholder="Enter amount" class="vp-field">
+        <div class="w3-container w3-cell">
+            <input type="text" v-model="txtAccountName" class="w3-input w3-border w3-hover-border w3-round-large" />
         </div>
-        <div class="vp-field-group">
-            <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-            <label for="vehicle3">Hiển thị thông tin tài khoản</label><br>
+    </div>
+
+    <div class="w3-cell-row">
+        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+            <label class="label">Amount:</label>
         </div>
-        <button class="VPButton medium brand">Create QR Code</button>
+        <div class="w3-container w3-cell">
+            <input type="text" v-model="txtAmount" class="w3-input w3-border w3-hover-border w3-round-large" />
+        </div>
+    </div>
+
+    <div class="w3-cell-row">
+        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+            <label class="label">Description:</label>
+        </div>
+        <div class="w3-container w3-cell">
+            <input type="text" v-model="txtDescription" class="w3-input w3-border w3-hover-border w3-round-large" />
+        </div>
+    </div>
+
+    <div class="w3-cell-row">
+        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+        </div>
+        <div class="w3-container w3-cell w3-cell-middle">
+            <input id="ckbAccept" class="w3-check" v-model="ckbAccept" type="checkbox">
+            <label class="accept-label" for="ckbAccept"> Đồng ý ....</label>
+        </div>
+    </div>
+    <div class="w3-cell-row button-bar">
+        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+        </div>
+        <div class="w3-container w3-cell">
+            <button class="w3-btn w3-round-xxlarge w3-brand" @click="createQRData">Create QR Code</button>
+        </div>
     </div>
 </template>
 
 <style scoped>
-.vp-form {
-    margin: 16px 0;
-}
-
-.vp-field-group {
+.w3-input {
+    padding: 10px 15px;
+    font-size: 17px;
+    line-height: 1.47059;
+    font-weight: 400;
+    margin-top: 8px;
     margin-bottom: 8px;
 }
 
-.vp-field {
-    border: 1px solid var(--vp-c-border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    margin: 8px 0;
-    width: 100%;
-    transition: box-shadow .25s ease;
-    letter-spacing: .2px;
-    line-height: 24px;
-    font-size: 16px;
-    font-weight: 400;
+.label {
+    font-size: 17px;
+    line-height: 1.47059;
+    font-weight: 600;
 }
 
-.vp-field:focus {
-    box-shadow: 0 0 4pt var(--vp-c-brand);
+.accept-label {
+    padding-top: 6px;
+    font-size: 16px;
 }
 
-.vp-field-label {
-    letter-spacing: .2px;
-    line-height: 24px;
-    font-size: 16px;
-    font-weight: 400;
+.button-bar {
+    margin-top: 24px;
 }
 </style>

@@ -1,3 +1,44 @@
+/**
+ * Headings
+ * -------------------------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 16px 0;
+    position: relative;
+    font-weight: 600;
+    outline: none;
+}
+
+h1 {
+    letter-spacing: -0.02em;
+    line-height: 40px;
+    font-size: 28px;
+}
+
+h2 {
+    letter-spacing: -0.02em;
+    line-height: 32px;
+    font-size: 24px;
+}
+
+h3 {
+    letter-spacing: -0.01em;
+    line-height: 28px;
+    font-size: 20px;
+}
+
+@media (min-width: 768px) {
+    h1 {
+        letter-spacing: -0.02em;
+        line-height: 40px;
+        font-size: 32px;
+    }
+}
+
 .w3-table,
 .w3-table-all {
     border-collapse: collapse;
@@ -54,6 +95,9 @@
     padding-left: 16px
 }
 
+/**
+ * Component: Button
+  * -------------------------------------------------------------------------- */
 .w3-btn,
 .w3-button {
     border: none;
@@ -202,7 +246,7 @@
 
 .w3-check,
 .w3-radio {
-    width: 24px;
+    width: 16px;
     height: 24px;
     position: relative;
     top: 6px
@@ -1063,6 +1107,46 @@
     text-align: center !important
 }
 
+.w3-border-0 {
+    border: 0 !important
+}
+
+.w3-border {
+    border: 1px solid #ccc !important
+}
+
+.w3-border-top {
+    border-top: 1px solid #ccc !important
+}
+
+.w3-border-bottom {
+    border-bottom: 1px solid #ccc !important
+}
+
+.w3-border-left {
+    border-left: 1px solid #ccc !important
+}
+
+.w3-border-right {
+    border-right: 1px solid #ccc !important
+}
+
+.w3-topbar {
+    border-top: 6px solid #ccc !important
+}
+
+.w3-bottombar {
+    border-bottom: 6px solid #ccc !important
+}
+
+.w3-leftbar {
+    border-left: 6px solid #ccc !important
+}
+
+.w3-rightbar {
+    border-right: 6px solid #ccc !important
+}
+
 .w3-section,
 .w3-code {
     margin-top: 16px !important;
@@ -1165,6 +1249,12 @@
 }
 
 /* Colors */
+.w3-brand,
+.w3-hover-brand:hover {
+    color: var(--vp-button-brand-text);
+    background-color: var(--vp-button-brand-bg);
+}
+
 .w3-amber,
 .w3-hover-amber:hover {
     color: #000 !important;
@@ -1489,59 +1579,6 @@
 .w3-text-dark-gray,
 .w3-hover-text-dark-gray:hover {
     color: #3a3a3a !important
-}
-
-/**
-* Component: Border
-* -------------------------------------------------------------------------- */
-
-.w3-border {
-    border: 1px solid var(--vp-c-border) !important
-}
-
-.w3-border-0 {
-    border: 0 !important
-}
-
-.w3-border-top {
-    border-top: 1px solid var(--vp-c-border) !important
-}
-
-.w3-border-bottom {
-    border-bottom: 1px solid var(--vp-c-border) !important
-}
-
-.w3-border-left {
-    border-left: 1px solid var(--vp-c-border) !important
-}
-
-.w3-border-right {
-    border-right: 1px solid var(--vp-c-border) !important
-}
-
-.w3-topbar {
-    border-top: 6px solid var(--vp-c-border) !important
-}
-
-.w3-bottombar {
-    border-bottom: 6px solid var(--vp-c-border) !important
-}
-
-.w3-leftbar {
-    border-left: 6px solid var(--vp-c-border) !important
-}
-
-.w3-rightbar {
-    border-right: 6px solid var(--vp-c-border) !important
-}
-
-.w3-hover-border:hover {
-    border-color: var(--vp-c-brand-lighter) !important
-}
-
-.w3-border-amber,
-.w3-hover-border-amber:hover {
-    border-color: #ffc107 !important
 }
 
 .w3-border-amber,
