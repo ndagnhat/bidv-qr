@@ -11,7 +11,7 @@ const step = ref(1);
 const qrData = ref({});
 
 function selectedQrType(type) {
-    qrType.value = type;
+    qrData.value.type = type;
     step.value = 2;
 }
 
@@ -34,7 +34,7 @@ Generate qr code description
 ---------------------------------------------------------------------
 <h2 :class="{'w3-disabled': step < 2}">Input data <a v-if="step > 2" href="#" class="w3-right w3-medium vp-link" @click="step = 2">Edit</a></h2>
 <div v-if="step == 2">
-    <InputQRDataPayment v-if="qrType=='payment'" @createQRData="createQRData"/>
+    <InputQRDataPayment v-if="qrData.type=='payment'" @createQRData="createQRData"/>
 </div>
 
 ---------------------------------------------------------------------

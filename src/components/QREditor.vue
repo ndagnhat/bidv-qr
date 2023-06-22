@@ -1,106 +1,193 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue';
+import { fabric } from 'fabric';
+import styleQRCodeDatas from '../qrstyles/styles.js'
+
 const props = defineProps(['qrdata', 'bankName', 'accountNo', 'accountName']);
 
-import { ref, onMounted } from 'vue';
-import { fabric } from 'fabric';
-
+const listStyles = ref({});
 const qrview = ref(null);
-const selFrame = ref("noframe");
+const styleIndex = ref(null);
+const styleCanvas = ref({});
+const styleQRCode = ref({});
+const styleBankTitle = ref({});
+const styleAccountNoTitle = ref({});
+const styleAccountNameTitle = ref({});
 
-var canvas = null;
-var canvasQRCode = null;
-var canvasBankTitle = null;
-var canvasAccountNoTitle = null;
-var canvasAccountNameTitle = null;
-
+let fonts = ['Chinese Quotes', 'Inter var', 'Inter', 'Segoe UI'];
+let canvas = null;
+let canvasQRCode = null;
+let canvasBankTitle = null;
+let canvasAccountNoTitle = null;
+let canvasAccountNameTitle = null;
 
 onMounted(() => {
+    listStyles.value = styleQRCodeDatas;
     let qrviewWidth = qrview.value.clientWidth;
     canvas = new fabric.Canvas("canvas", { backgroundColor: "#ffffff", width: 1000, height: 1000 });
     canvas.setZoom(qrviewWidth / 1000);
     canvas.setWidth(qrviewWidth);
     canvas.setHeight(qrviewWidth);
-
+    canvasBankTitle = new fabric.Text(props.bankName);
+    canvasAccountNoTitle = new fabric.Text(props.accountNo);
+    canvasAccountNameTitle = new fabric.Text(props.accountName);
+    canvas.add(canvasBankTitle);
+    canvas.add(canvasAccountNoTitle);
+    canvas.add(canvasAccountNameTitle);
     fabric.Image.fromURL(props.qrdata, function (img) {
         canvasQRCode = img;
-        canvasBankTitle = new fabric.Text(props.bankName);
-        canvasAccountNoTitle = new fabric.Text(props.accountNo);
-        canvasAccountNameTitle = new fabric.Text(props.accountName);
         canvas.add(canvasQRCode);
-        canvas.add(canvasBankTitle);
-        canvas.add(canvasAccountNoTitle);
-        canvas.add(canvasAccountNameTitle);
         canvas.renderAll();
+        setStyle(0);
     }, {
         crossOrigin: 'anonymous'
     });
 });
 
-function selectFrame1() {
-    setFrame(null, 1000, 1200);
-    styleQRCode({top: 100, left: 100, width: 800, height: 800});
-    styleBankTitle({top: 950, left: 100});
-    styleAccountNoTitle({top: 1070, left: 100});
-    styleAccountNameTitle({top: 1120, left: 100});
-    canvas.renderAll();
+function setStyle(index) {
+    let style = listStyles.value[index];
+    styleCanvas.value = style.frame;
+    styleQRCode.value = style.qrcode;
+    styleBankTitle.value = style.bankTitle;
+    styleAccountNoTitle.value = style.accountNoTitle;
+    styleAccountNameTitle.value = style.accountNameTitle;
+    styleIndex.value = index;
 }
 
-function setFrame(frame, canvasWidth, canvasHeight) {   
-    if(frame == null) {
-        canvas.setBackgroundImage(null);
-        canvas.setBackgroundColor("#ffffff");
-    } else {
-        canvas.setBackgroundImage(frame);
+watch(styleCanvas, (style) => {
+    let canvasWidth = style.width;
+    let canvasHeight = style.height;
+    if (style.background != null) {
+        if (style.background.startsWith("http") || style.background.startsWith("data")) {
+            fabric.Image.fromURL(style.background, function (img) {
+                if (style.width == null || style.height == null) {
+                    canvasWidth = img.width;
+                    canvasHeight = img.height;
+                }
+                canvas.setBackgroundImage(img);
+                setFrameSize(canvasWidth, canvasHeight);
+            }, {
+                crossOrigin: 'anonymous'
+            });
+        } else {
+            canvas.setBackgroundImage(null);
+            canvas.setBackgroundColor(style.background);
+            if (style.width == null || style.height == null) {
+                canvasWidth = 1000;
+                canvasHeight = 1200;
+            }
+            setFrameSize(canvasWidth, canvasHeight);
+        }
     }
+});
 
+function setFrameSize(canvasWidth, canvasHeight) {
     let canvasZoom = qrview.value.clientWidth / canvasWidth;
     let canvasZoomWidth = canvasWidth * canvasZoom;
     let canvasZoomHeight = canvasHeight * canvasZoom;
-
     canvas.setZoom(canvasZoom);
     canvas.setWidth(canvasZoomWidth);
     canvas.setHeight(canvasZoomHeight);
+    canvas.renderAll();
 }
 
-function styleQRCode(style) {
-    if(style.top != null) {
-        canvasQRCode.top = style.top;
+watch(styleQRCode, (style) => {
+    if (canvasQRCode != null) {
+        if (style.top != null) {
+            canvasQRCode.top = style.top;
+        }
+        if (style.left != null) {
+            canvasQRCode.left = style.left;
+        }
+        if (style.width != null) {
+            canvasQRCode.scaleX = style.width / canvasQRCode.width;
+        }
+        if (style.height != null) {
+            canvasQRCode.scaleY = style.height / canvasQRCode.height;
+        }
+        canvasQRCode.visible = true;
     }
-    if(style.left != null) {
-        canvasQRCode.left = style.left;
-    }
-    if(style.width != null) {
-        canvasQRCode.scaleX = style.width / canvasQRCode.width;
-    }
-    if(style.height != null) {
-        canvasQRCode.scaleY = style.height / canvasQRCode.height;
-    }
-}
+    canvasQRCode.setCoords();
+    canvas.renderAll();
+});
 
-function styleBankTitle(style) {
-    if(style.top != null) {
+watch(styleBankTitle, (style) => {
+    if (style.top != null) {
         canvasBankTitle.top = style.top;
     }
-    if(style.left != null) {
+    if (style.left != null) {
         canvasBankTitle.left = style.left;
     }
-}
+    if (style.color != null) {
+        canvasBankTitle.fill = style.color;
+    }
+    if (style.fontSize != null) {
+        canvasBankTitle.fontSize = style.fontSize;
+    }
+    if (style.fontFamily != null) {
+        canvasBankTitle.fontFamily = style.fontFamily;
+    }
+    if (style.visible != null) {
+        canvasBankTitle.visible = style.visible;
+    }
+    canvasBankTitle.setCoords();
+    canvas.renderAll();
+});
 
-function styleAccountNoTitle(style) {
-    if(style.top != null) {
+watch(styleAccountNoTitle, (style) => {
+    if (style.top != null) {
         canvasAccountNoTitle.top = style.top;
     }
-    if(style.left != null) {
+    if (style.left != null) {
         canvasAccountNoTitle.left = style.left;
     }
-}
+    if (style.color != null) {
+        canvasAccountNoTitle.fill = style.color;
+    }
+    if (style.fontSize != null) {
+        canvasAccountNoTitle.fontSize = style.fontSize;
+    }
+    if (style.fontFamily != null) {
+        canvasAccountNoTitle.fontFamily = style.fontFamily;
+    }
+    if (style.visible != null) {
+        canvasAccountNoTitle.visible = style.visible;
+    }
+    canvasAccountNoTitle.setCoords();
+    canvas.renderAll();
+});
 
-function styleAccountNameTitle(style) {
-    if(style.top != null) {
+watch(styleAccountNameTitle, (style) => {
+    if (style.top != null) {
         canvasAccountNameTitle.top = style.top;
     }
-    if(style.left != null) {
+    if (style.left != null) {
         canvasAccountNameTitle.left = style.left;
+    }
+    if (style.color != null) {
+        canvasAccountNameTitle.fill = style.color;
+    }
+    if (style.fontSize != null) {
+        canvasAccountNameTitle.fontSize = style.fontSize;
+    }
+    if (style.fontFamily != null) {
+        canvasAccountNameTitle.fontFamily = style.fontFamily;
+    }
+    canvasAccountNameTitle.setCoords();
+    canvas.renderAll();
+});
+
+function onFileChange(e) {
+    var files = e.target.files || e.dataTransfer.files;
+    if (files.length > 0) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function (f) {
+            var data = f.target.result;
+            styleCanvas.value = {background: data};
+            styleIndex.value = -1;
+        };
+        reader.readAsDataURL(file);
     }
 }
 
@@ -117,8 +204,18 @@ function downloadAsFile() {
 
 <template>
     <div class="container">
-        <div class="w3-container qrtool">
+        <div class="qrtool">
             <h6>Select a frame</h6>
+                <div class="row">
+                    <template v-for="(style, index) in styleQRCodeDatas">
+                        <img v-if="style.frame.background.startsWith('http')" :src="style.frame.background" :class="{ 'active': styleIndex == index}" alt="Frame 1" class="thumbnail" @click="setStyle(index)">
+                        <div v-else :style="{ 'background-color': style.frame.background }" :class="{ 'active': styleIndex == index}" class="thumbnail" style="width: 40px;" @click="setStyle(index)"/>
+                    </template>
+                    <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
+                </div>
+            <h6>Bank name title</h6>
+            <input id="ckbAccept" class="w3-check" type="checkbox">
+            <label class="accept-label" for="ckbAccept"> Visible</label>
             <button class="w3-btn w3-round-xxlarge w3-brand" @click="selectFrame1">TestFrame</button>
             <button class="w3-btn w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
         </div>
@@ -144,7 +241,26 @@ function downloadAsFile() {
     background-color: var(--vp-sidebar-bg-color);
 }
 
-.qrtool {
-    margin: 24px;
+.row::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.thumbnail {
+    border: 4px solid var(--vp-c-border);
+    border-radius: 6px;
+    padding: 0;
+    margin: 5px;
+    height: 40px;
+    float: left;
+}
+
+.thumbnail:hover {
+    box-shadow: 0 0 2px 1px var(--vp-c-brand);
+}
+
+.thumbnail.active {
+    box-shadow: 0 0 2px 2px var(--vp-c-brand);
 }
 </style>
