@@ -2,7 +2,6 @@
 import { h } from 'vue'
 import Theme from 'vitepress/theme'
 import './styles/style.css';
-import './styles/vp-page.css';
 import './styles/w3.css';
 
 export default {
