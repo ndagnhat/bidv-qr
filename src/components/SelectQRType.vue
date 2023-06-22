@@ -23,8 +23,14 @@ const emit = defineEmits(['selectedQrType'])
 .container {
     display: grid;
     grid-template-columns: auto;
-    padding: 10px 16px;
+    padding: 10px 0;
     gap: 16px;
+}
+
+@media (min-width: 520px) {
+    .container {
+    padding: 10px 16px;
+    }
 }
 
 @media (min-width: 768px) {

@@ -92,7 +92,6 @@ onMounted(() => {
 .container {
     display: grid;
     grid-template-columns: auto;
-    padding: 10px 16px;
     align-items: center;
 }
 
@@ -108,6 +107,12 @@ onMounted(() => {
     padding-top: 5px;
 }
 
+
+@media (min-width: 520px) {
+    .container {
+        padding: 10px 16px;
+    }
+}
 
 @media (min-width: 768px) {
     .container {
