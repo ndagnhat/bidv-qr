@@ -6,7 +6,9 @@ const emit = defineEmits(['selectedQrType'])
 
 <template>
     <div class="container">
-        <div class="item w3-border w3-hover-border w3-round-large" @click="$emit('selectedQrType', 'payment')"><img src="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/cas/v1/payment.svg" alt="" width="42" height="42" /> <span>QR Payment</span></div>
+        <div class="item w3-border w3-hover-border w3-round-large" @click="$emit('selectedQrType', 'payment')"><img
+                src="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/cas/v1/payment.svg" alt=""
+                width="42" height="42" /> <span>QR Payment</span></div>
         <div class="item w3-border w3-hover-border w3-round-large" @click="$emit('selectedQrType', 'link')">Link</div>
         <div class="item w3-border w3-hover-border w3-round-large" @click="$emit('selectedQrType', '1')">Text</div>
         <div class="item w3-border w3-hover-border w3-round-large" @click="$emit('selectedQrType', '1')">Wifi</div>
@@ -20,9 +22,21 @@ const emit = defineEmits(['selectedQrType'])
 <style scoped>
 .container {
     display: grid;
-    grid-template-columns: 5fr 5fr;
-    padding: 10px 16px;
+    grid-template-columns: auto;
+    padding: 10px 0;
     gap: 16px;
+}
+
+@media (min-width: 520px) {
+    .container {
+    padding: 10px 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        grid-template-columns: 5fr 5fr;
+    }
 }
 
 .item {
@@ -32,7 +46,7 @@ const emit = defineEmits(['selectedQrType'])
     font-size: 17px;
     font-weight: 600;
     min-height: 62px;
-    cursor: pointer;   
+    cursor: pointer;
 }
 
 .item img {

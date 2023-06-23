@@ -285,11 +285,19 @@ function downloadAsFile() {
 </template>
 
 <style scoped>
+
 .container {
     display: grid;
-    grid-template-columns: 3fr 7fr;
+    grid-template-columns: auto;
     padding: 10px 16px;
-    gap: 16px;
+    align-items: center;
+}
+
+@media (min-width: 768px) {
+    .container {
+        grid-template-columns: 3fr 7fr;
+        gap: 16px;
+    }
 }
 
 .qrview {

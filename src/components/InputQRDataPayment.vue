@@ -41,94 +41,98 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="w3-cell-row">
-        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+    <div class="container">
+        <div class="left-item">
             <label class="label">Banks:</label>
         </div>
-        <div class="w3-container w3-cell">
+        <div class="right-item">
             <select name="banks" v-model="selBankId" class="w3-input w3-border w3-hover-border w3-round-large">
                 <option v-for="bank in listBanks" :value="bank.code">
                     {{ bank.name }}
                 </option>
             </select>
         </div>
-    </div>
-
-    <div class="w3-cell-row">
-        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+        <div class="left-item">
             <label class="label">Account number:</label>
         </div>
-        <div class="w3-container w3-cell">
+        <div class="right-item">
             <input type="text" v-model="txtAccountNo" class="w3-input w3-border w3-hover-border w3-round-large" />
         </div>
-    </div>
-
-    <div class="w3-cell-row">
-        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+        <div class="left-item">
             <label class="label">Account Name:</label>
         </div>
-        <div class="w3-container w3-cell">
+        <div class="right-item">
             <input type="text" v-model="txtAccountName" class="w3-input w3-border w3-hover-border w3-round-large" />
         </div>
-    </div>
-
-    <div class="w3-cell-row">
-        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+        <div class="left-item">
             <label class="label">Amount:</label>
         </div>
-        <div class="w3-container w3-cell">
+        <div class="right-item">
             <input type="text" v-model="txtAmount" class="w3-input w3-border w3-hover-border w3-round-large" />
         </div>
-    </div>
-
-    <div class="w3-cell-row">
-        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+        <div class="left-item">
             <label class="label">Description:</label>
         </div>
-        <div class="w3-container w3-cell">
+        <div class="right-item">
             <input type="text" v-model="txtDescription" class="w3-input w3-border w3-hover-border w3-round-large" />
         </div>
-    </div>
-
-    <div class="w3-cell-row">
-        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
+        <div class="left-item"></div>
+        <div class="right-item">
+            <input id="ckbAccept" v-model="ckbAccept" type="checkbox">
+            <label for="ckbAccept"> Đồng ý ....</label>
         </div>
-        <div class="w3-container w3-cell w3-cell-middle">
-            <input id="ckbAccept" class="w3-check" v-model="ckbAccept" type="checkbox">
-            <label class="accept-label" for="ckbAccept"> Đồng ý ....</label>
-        </div>
-    </div>
-    <div class="w3-cell-row button-bar">
-        <div class="w3-container w3-cell w3-right-align w3-cell-middle" style="width:300px">
-        </div>
-        <div class="w3-container w3-cell">
-            <button class="w3-btn w3-round-xxlarge w3-brand" @click="createQRData">Create QR Code</button>
+        <div class="left-item"></div>
+        <div class="right-item">
+            <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="createQRData">Create QR Code</button>
         </div>
     </div>
 </template>
 
 <style scoped>
-.w3-input {
-    padding: 10px 15px;
-    font-size: 17px;
-    line-height: 1.47059;
-    font-weight: 400;
-    margin-top: 8px;
-    margin-bottom: 8px;
+.container {
+    display: grid;
+    grid-template-columns: auto;
+    align-items: center;
 }
 
-.label {
+.left-item {
     font-size: 17px;
     line-height: 1.47059;
     font-weight: 600;
 }
 
-.accept-label {
-    padding-top: 6px;
-    font-size: 16px;
+
+.right-item {
+    padding-bottom: 16px;
+    padding-top: 5px;
 }
 
-.button-bar {
-    margin-top: 24px;
+
+@media (min-width: 520px) {
+    .container {
+        padding: 10px 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        grid-template-columns: 3fr 7fr;
+        gap: 16px;
+    }
+
+    .left-item {
+        justify-self: end;
+    }
+
+    .right-item {
+        padding: 0;
+    }
+}
+
+.w3-input {
+    padding: 10px 15px;
+    font-size: 17px;
+    line-height: 1.47059;
+    font-weight: 400;
 }
 </style>
