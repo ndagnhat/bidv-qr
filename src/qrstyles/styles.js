@@ -6,10 +6,10 @@ export default [
             width: 1000,
             height: 1200
         },
-        qrcode: { top: 100, left: 100, width: 800, height: 800 },
-        bankTitle: { visible: true, top: 950, left: 100, color: "green", fontSize: 40, fontFamily: "Segoe UI" },
-        accountNoTitle: { visible: true, top: 1070, left: 100 },
-        accountNameTitle: { visible: true, top: 1120, left: 100 }
+        qrcode: { visible: true, top: 100, left: 100, width: 800, height: 800 },
+        bank: { visible: true, top: 950, left: 100, color: "green", fontSize: 40, fontFamily: "Segoe UI" },
+        accountNo: { visible: true, top: 1070, left: 100 },
+        accountName: { visible: true, top: 1120, left: 100 }
     }, {
         id: 2,
         frame: {
@@ -17,9 +17,9 @@ export default [
             width: 1000,
             height: 1200
         },
-        qrcode: { top: 100, left: 100, width: 800, height: 800 },
-        bankTitle: { visible: true, top: 950, left: 100, color: "green", fontSize: 40, fontFamily: "Segoe UI" },
-        accountNoTitle: { top: 1070, left: 100 },
-        accountNameTitle: { top: 1120, left: 100 }
+        qrcode: { visible: true, top: 100, left: 100, width: 800, height: 800 },
+        accountNo: { visible: true, top: 950, left: 100, color: "green", fontSize: 40, fontFamily: "Segoe UI" },
+        accountNo: { top: 1070, left: 100 },
+        accountName: { top: 1120, left: 100 }
     },
 ]

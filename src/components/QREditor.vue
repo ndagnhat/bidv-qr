@@ -1,18 +1,32 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, reactive } from 'vue';
 import { fabric } from 'fabric';
-import styleQRCodeDatas from '../qrstyles/styles.js'
+import listStyleDatas from '../qrstyles/styles.js'
 
 const props = defineProps(['qrdata', 'bankName', 'accountNo', 'accountName']);
+const style = reactive({
+    id: 0,
+    frame: {
+        background: null,
+        width: 1000,
+        height: 1000,
+    },
+    qrcode: {
+        visble: false,
+        editable: false,
+        top: 0,
+        left: 0,
+        width: 1000,
+        height: 1000
+    },
+    bank: {},
+    accountNo: {},
+    accountName: {}
+});
 
 const listStyles = ref({});
 const qrview = ref(null);
-const styleIndex = ref(null);
-const styleCanvas = ref({});
-const styleQRCode = ref({});
-const styleBankTitle = ref({});
-const styleAccountNoTitle = ref({});
-const styleAccountNameTitle = ref({});
+const styleIndex = ref(true);
 
 let fonts = ['Chinese Quotes', 'Inter var', 'Inter', 'Segoe UI'];
 let canvas = null;
@@ -22,158 +36,198 @@ let canvasAccountNoTitle = null;
 let canvasAccountNameTitle = null;
 
 onMounted(() => {
-    listStyles.value = styleQRCodeDatas;
+    listStyles.value = listStyleDatas;
     let qrviewWidth = qrview.value.clientWidth;
     canvas = new fabric.Canvas("canvas", { backgroundColor: "#ffffff", width: 1000, height: 1000 });
     canvas.setZoom(qrviewWidth / 1000);
     canvas.setWidth(qrviewWidth);
     canvas.setHeight(qrviewWidth);
-    canvasBankTitle = new fabric.Text(props.bankName);
-    canvasAccountNoTitle = new fabric.Text(props.accountNo);
-    canvasAccountNameTitle = new fabric.Text(props.accountName);
-    canvas.add(canvasBankTitle);
-    canvas.add(canvasAccountNoTitle);
-    canvas.add(canvasAccountNameTitle);
     fabric.Image.fromURL(props.qrdata, function (img) {
         canvasQRCode = img;
+        canvasBankTitle = new fabric.Text(props.bankName);
+        canvasAccountNoTitle = new fabric.Text(props.accountNo);
+        canvasAccountNameTitle = new fabric.Text(props.accountName);
+        canvasQRCode.visible = false;
+        canvasBankTitle.visible = false;
+        canvasAccountNoTitle.visible = false;
+        canvasAccountNameTitle.visible = false;
         canvas.add(canvasQRCode);
+        canvas.add(canvasBankTitle);
+        canvas.add(canvasAccountNoTitle);
+        canvas.add(canvasAccountNameTitle);
         canvas.renderAll();
-        setStyle(0);
+        setStyle(1);
     }, {
         crossOrigin: 'anonymous'
     });
 });
 
-function setStyle(index) {
-    let style = listStyles.value[index];
-    styleCanvas.value = style.frame;
-    styleQRCode.value = style.qrcode;
-    styleBankTitle.value = style.bankTitle;
-    styleAccountNoTitle.value = style.accountNoTitle;
-    styleAccountNameTitle.value = style.accountNameTitle;
-    styleIndex.value = index;
+function setStyle(styleid) {
+    const styleData = listStyleDatas.find((s) => s.id == styleid);
+    console.log(1);
+    console.log(style);
+    style.qrcode.visble.value = !style.qrcode.visble.value;
+    styleIndex.value = !styleIndex.value;
+    //style.value = styleData;
+
+    // let style = listStyles.value[index];
+    // styleCanvas.value = style.frame;
+    // styleQRCode.value = style.qrcode;
+    // styleBankTitle.value = style.bankTitle;
+    // styleAccountNoTitle.value = style.accountNoTitle;
+    // styleAccountNameTitle.value = style.accountNameTitle;
+    // styleIndex.value = index;
 }
 
-watch(styleCanvas, (style) => {
-    let canvasWidth = style.width;
-    let canvasHeight = style.height;
-    if (style.background != null) {
-        if (style.background.startsWith("http") || style.background.startsWith("data")) {
-            fabric.Image.fromURL(style.background, function (img) {
-                if (style.width == null || style.height == null) {
+watch(style, (newStyle) => {
+    // canvas style
+    let s = newStyle;
+    if (s.frame.background == null) {
+        canvas.setBackgroundImage(null);
+        canvas.setBackgroundColor("null");
+        if (s.frame.width != null && s.frame.height != null) {
+            let canvasZoom = qrview.value.clientWidth / canvasWidth;
+            let canvasZoomWidth = s.frame.height * canvasZoom;
+            let canvasZoomHeight = s.frame.height * canvasZoom;
+            canvas.setZoom(canvasZoom);
+            canvas.setWidth(canvasZoomWidth);
+            canvas.setHeight(canvasZoomHeight);
+        }
+    } else {
+        let canvasWidth = s.frame.width;
+        let canvasHeight = s.frame.height;
+        if (s.frame.background.startsWith("http") || s.frame.background.startsWith("data")) {
+            fabric.Image.fromURL(s.frame.background, function (img) {
+                if (canvasWidth == null || canvasHeight == null) {
                     canvasWidth = img.width;
                     canvasHeight = img.height;
                 }
                 canvas.setBackgroundImage(img);
-                setFrameSize(canvasWidth, canvasHeight);
+                let canvasZoom = qrview.value.clientWidth / canvasWidth;
+                let canvasZoomWidth = canvasWidth * canvasZoom;
+                let canvasZoomHeight = canvasHeight * canvasZoom;
+                canvas.setZoom(canvasZoom);
+                canvas.setWidth(canvasZoomWidth);
+                canvas.setHeight(canvasZoomHeight);
+                canvas.renderAll();
             }, {
                 crossOrigin: 'anonymous'
             });
         } else {
             canvas.setBackgroundImage(null);
-            canvas.setBackgroundColor(style.background);
-            if (style.width == null || style.height == null) {
+            canvas.setBackgroundColor(s.frame.background);
+            if (canvasWidth == null || canvasHeight == null) {
                 canvasWidth = 1000;
                 canvasHeight = 1200;
             }
-            setFrameSize(canvasWidth, canvasHeight);
+            let canvasZoom = qrview.value.clientWidth / canvasWidth;
+            let canvasZoomWidth = canvasWidth * canvasZoom;
+            let canvasZoomHeight = canvasHeight * canvasZoom;
+            canvas.setZoom(canvasZoom);
+            canvas.setWidth(canvasZoomWidth);
+            canvas.setHeight(canvasZoomHeight);
         }
     }
-});
 
-function setFrameSize(canvasWidth, canvasHeight) {
-    let canvasZoom = qrview.value.clientWidth / canvasWidth;
-    let canvasZoomWidth = canvasWidth * canvasZoom;
-    let canvasZoomHeight = canvasHeight * canvasZoom;
-    canvas.setZoom(canvasZoom);
-    canvas.setWidth(canvasZoomWidth);
-    canvas.setHeight(canvasZoomHeight);
-    canvas.renderAll();
-}
-
-watch(styleQRCode, (style) => {
+    // qrcode style
     if (canvasQRCode != null) {
-        if (style.top != null) {
-            canvasQRCode.top = style.top;
+        if (s.qrcode.visible != null) {
+            canvasQRCode.visible = s.qrcode.visible;
         }
-        if (style.left != null) {
-            canvasQRCode.left = style.left;
+        if (s.qrcode.top != null) {
+            canvasQRCode.top = s.qrcode.top;
+            canvasQRCode.setCoords();
         }
-        if (style.width != null) {
-            canvasQRCode.scaleX = style.width / canvasQRCode.width;
+        if (s.qrcode.left != null) {
+            canvasQRCode.left = s.qrcode.left;
+            canvasQRCode.setCoords();
         }
-        if (style.height != null) {
-            canvasQRCode.scaleY = style.height / canvasQRCode.height;
+        if (s.qrcode.width != null) {
+            canvasQRCode.scaleX = s.qrcode.width / canvasQRCode.width;
+        }
+        if (s.qrcode.height != null) {
+            canvasQRCode.scaleY = s.qrcode.height / canvasQRCode.height;
         }
         canvasQRCode.visible = true;
     }
-    canvasQRCode.setCoords();
-    canvas.renderAll();
-});
 
-watch(styleBankTitle, (style) => {
-    if (style.top != null) {
-        canvasBankTitle.top = style.top;
+    // bank title style
+    if (canvasBankTitle != null) {
+        if (s.bank.visible != null) {
+            canvasBankTitle.visible = s.bank.visible;
+        }
+        if (s.bank.top != null) {
+            canvasBankTitle.top = s.bank.top;
+            canvasBankTitle.setCoords();
+        }
+        if (s.bank.left != null) {
+            canvasBankTitle.left = s.bank.left;
+            canvasBankTitle.setCoords();
+        }
+        if (s.bank.color != null) {
+            canvasBankTitle.fill = s.bank.color;
+        }
+        if (s.bank.fontSize != null) {
+            canvasBankTitle.fontSize = s.bank.fontSize;
+        }
+        if (s.bank.fontFamily != null) {
+            canvasBankTitle.fontFamily = s.bank.fontFamily;
+        }
+        if (s.bank.visible != null) {
+            canvasBankTitle.visible = s.bank.visible;
+        }
     }
-    if (style.left != null) {
-        canvasBankTitle.left = style.left;
-    }
-    if (style.color != null) {
-        canvasBankTitle.fill = style.color;
-    }
-    if (style.fontSize != null) {
-        canvasBankTitle.fontSize = style.fontSize;
-    }
-    if (style.fontFamily != null) {
-        canvasBankTitle.fontFamily = style.fontFamily;
-    }
-    if (style.visible != null) {
-        canvasBankTitle.visible = style.visible;
-    }
-    canvasBankTitle.setCoords();
-    canvas.renderAll();
-});
 
-watch(styleAccountNoTitle, (style) => {
-    if (style.top != null) {
-        canvasAccountNoTitle.top = style.top;
+    // account no title style
+    if (canvasAccountNoTitle != null) {
+        if (s.accountNo.visible != null) {
+            canvasAccountNoTitle.visible = s.accountNo.visible;
+        }
+        if (s.accountNo.top != null) {
+            canvasAccountNoTitle.top = s.accountNo.top;
+            canvasAccountNoTitle.setCoords();
+        }
+        if (s.accountNo.left != null) {
+            canvasAccountNoTitle.left = s.accountNo.left;
+            canvasAccountNoTitle.setCoords();
+        }
+        if (s.accountNo.color != null) {
+            canvasAccountNoTitle.fill = s.accountNo.color;
+        }
+        if (s.accountNo.fontSize != null) {
+            canvasAccountNoTitle.fontSize = s.accountNo.fontSize;
+        }
+        if (s.accountNo.fontFamily != null) {
+            canvasAccountNoTitle.fontFamily = s.accountNo.fontFamily;
+        }
+        if (s.accountNo.visible != null) {
+            canvasAccountNoTitle.visible = s.accountNo.visible;
+        }
     }
-    if (style.left != null) {
-        canvasAccountNoTitle.left = style.left;
-    }
-    if (style.color != null) {
-        canvasAccountNoTitle.fill = style.color;
-    }
-    if (style.fontSize != null) {
-        canvasAccountNoTitle.fontSize = style.fontSize;
-    }
-    if (style.fontFamily != null) {
-        canvasAccountNoTitle.fontFamily = style.fontFamily;
-    }
-    if (style.visible != null) {
-        canvasAccountNoTitle.visible = style.visible;
-    }
-    canvasAccountNoTitle.setCoords();
-    canvas.renderAll();
-});
 
-watch(styleAccountNameTitle, (style) => {
-    if (style.top != null) {
-        canvasAccountNameTitle.top = style.top;
+    // account name title style
+    if (canvasAccountNameTitle != null) {
+        if (s.accountName.visible != null) {
+            canvasAccountNameTitle.visible = s.accountName.visible;
+        }
+        if (s.accountName.top != null) {
+            canvasAccountNameTitle.top = s.accountName.top;
+            canvasAccountNameTitle.setCoords();
+        }
+        if (s.accountName.left != null) {
+            canvasAccountNameTitle.left = s.accountName.left;
+            canvasAccountNameTitle.setCoords();
+        }
+        if (s.accountName.color != null) {
+            canvasAccountNameTitle.fill = s.accountName.color;
+        }
+        if (s.accountName.fontSize != null) {
+            canvasAccountNameTitle.fontSize = s.accountName.fontSize;
+        }
+        if (s.accountName.fontFamily != null) {
+            canvasAccountNameTitle.fontFamily = s.accountName.fontFamily;
+        }
     }
-    if (style.left != null) {
-        canvasAccountNameTitle.left = style.left;
-    }
-    if (style.color != null) {
-        canvasAccountNameTitle.fill = style.color;
-    }
-    if (style.fontSize != null) {
-        canvasAccountNameTitle.fontSize = style.fontSize;
-    }
-    if (style.fontFamily != null) {
-        canvasAccountNameTitle.fontFamily = style.fontFamily;
-    }
-    canvasAccountNameTitle.setCoords();
     canvas.renderAll();
 });
 
@@ -184,8 +238,8 @@ function onFileChange(e) {
         var reader = new FileReader();
         reader.onload = function (f) {
             var data = f.target.result;
-            styleCanvas.value = {background: data};
-            styleIndex.value = -1;
+            // styleCanvas.value = { background: data };
+            // styleIndex.value = -1;
         };
         reader.readAsDataURL(file);
     }
@@ -206,16 +260,19 @@ function downloadAsFile() {
     <div class="container">
         <div class="qrtool">
             <h6>Select a frame</h6>
-                <div class="row">
-                    <template v-for="(style, index) in styleQRCodeDatas">
-                        <img v-if="style.frame.background.startsWith('http')" :src="style.frame.background" :class="{ 'active': styleIndex == index}" alt="Frame 1" class="thumbnail" @click="setStyle(index)">
-                        <div v-else :style="{ 'background-color': style.frame.background }" :class="{ 'active': styleIndex == index}" class="thumbnail" style="width: 40px;" @click="setStyle(index)"/>
-                    </template>
-                    <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
-                </div>
+            <div class="row">
+                <template v-for="s in listStyleDatas">
+                    <img v-if="s.frame.background.startsWith('http') || s.frame.background.startsWith('data')" :src="s.frame.background"
+                        :class="{ 'active': s.id == style.id }" alt="Frame 1" class="thumbnail" @click="setStyle(s.id)">
+                    <div v-else :style="{ 'background-color': s.frame.background }"
+                        :class="{ 'active': s.id == style.id }" class="thumbnail" style="width: 40px;"
+                        @click="setStyle(s.id)" />
+                </template>
+                <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
+            </div>
             <h6>Bank name title</h6>
-            <input id="ckbAccept" class="w3-check" type="checkbox">
-            <label class="accept-label" for="ckbAccept"> Visible</label>
+            <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="style.qrcode.visble">
+            <label class="accept-label" for="ckbBankVisible"> {{ style.qrcode.visble }}</label>
             <button class="w3-btn w3-round-xxlarge w3-brand" @click="selectFrame1">TestFrame</button>
             <button class="w3-btn w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
         </div>
