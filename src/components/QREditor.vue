@@ -6,22 +6,51 @@ import listStyleDatas from '../qrstyles/styles.js'
 const props = defineProps(['qrdata', 'bankName', 'accountNo', 'accountName']);
 const style = reactive({
     id: 0,
+    editable: false,
     frame: {
         background: null,
         width: 1000,
-        height: 1000,
-    },
-    qrcode: {
-        visble: false,
-        editable: false,
-        top: 0,
-        left: 0,
-        width: 1000,
         height: 1000
     },
-    bank: {},
-    accountNo: {},
-    accountName: {}
+    qrcode: {
+        visible: true,
+        centerV: null,
+        centerH: null,
+        top: null,
+        left: null,
+        width: 800, 
+        height: 800
+    },
+    bank: {
+        visble: true,
+        centerV: null,
+        centerH: null,
+        top: null,
+        left: null,
+        color: null, 
+        fontSize: null,
+        fontFamily: null
+    },
+    accountNo: {
+        visble: true,
+        centerV: null,
+        centerH: null,
+        top: null,
+        left: null,
+        color: null, 
+        fontSize: null,
+        fontFamily: null
+    },
+    accountName: {
+        visble: true,
+        centerV: null,
+        centerH: null,
+        top: null,
+        left: null,
+        color: null, 
+        fontSize: null,
+        fontFamily: null
+    }
 });
 
 const listStyles = ref({});
@@ -47,10 +76,10 @@ onMounted(() => {
         canvasBankTitle = new fabric.Text(props.bankName);
         canvasAccountNoTitle = new fabric.Text(props.accountNo);
         canvasAccountNameTitle = new fabric.Text(props.accountName);
-        canvasQRCode.visible = false;
-        canvasBankTitle.visible = false;
-        canvasAccountNoTitle.visible = false;
-        canvasAccountNameTitle.visible = false;
+        // canvasQRCode.visible = false;
+        // canvasBankTitle.visible = false;
+        // canvasAccountNoTitle.visible = false;
+        // canvasAccountNameTitle.visible = false;
         canvas.add(canvasQRCode);
         canvas.add(canvasBankTitle);
         canvas.add(canvasAccountNoTitle);
@@ -64,9 +93,39 @@ onMounted(() => {
 
 function setStyle(styleid) {
     const styleData = listStyleDatas.find((s) => s.id == styleid);
-    console.log(1);
-    console.log(style);
-    style.qrcode.visble.value = !style.qrcode.visble.value;
+    style.id = styleData.id;
+    style.editable = styleData.editable;
+    style.frame.background = styleData.frame.background;
+    style.frame.width = styleData.frame.width
+    style.frame.height = styleData.frame.height
+    style.qrcode.centerH = styleData.qrcode.centerH
+    style.qrcode.centerV = styleData.qrcode.centerV
+    style.qrcode.top = styleData.qrcode.top
+    style.qrcode.left = styleData.qrcode.left
+    style.qrcode.width = styleData.qrcode.width
+    style.qrcode.height = styleData.qrcode.height
+    style.bank.visble = styleData.bank.visble
+    style.bank.centerH = styleData.bank.centerH
+    style.bank.centerH = styleData.bank.centerH
+    style.bank.top = styleData.bank.top
+    style.bank.left = styleData.bank.left
+    style.bank.fontSize = styleData.bank.fontSize,
+    style.bank.fontFamily = styleData.bank.fontFamily
+    style.accountNo.visble = styleData.accountNo.visble
+    style.accountNo.centerH = styleData.accountNo.centerH
+    style.accountNo.centerH = styleData.accountNo.centerH
+    style.accountNo.top = styleData.accountNo.top
+    style.accountNo.left = styleData.accountNo.left
+    style.accountNo.fontSize = styleData.accountNo.fontSize,
+    style.accountNo.fontFamily = styleData.accountNo.fontFamily
+    style.accountName.visble = styleData.accountName.visble
+    style.accountName.centerH = styleData.accountName.centerH
+    style.accountName.centerH = styleData.accountName.centerH
+    style.accountName.top = styleData.accountName.top
+    style.accountName.left = styleData.accountName.left
+    style.baccountNameank.fontSize = styleData.baccountNameank.fontSize,
+    style.accountName.fontFamily = styleData.accountName.fontFamily
+
     styleIndex.value = !styleIndex.value;
     //style.value = styleData;
 
@@ -262,11 +321,11 @@ function downloadAsFile() {
             <h6>Select a frame</h6>
             <div class="row">
                 <template v-for="s in listStyleDatas">
-                    <img v-if="s.frame.background.startsWith('http') || s.frame.background.startsWith('data')" :src="s.frame.background"
-                        :class="{ 'active': s.id == style.id }" alt="Frame 1" class="thumbnail" @click="setStyle(s.id)">
-                    <div v-else :style="{ 'background-color': s.frame.background }"
-                        :class="{ 'active': s.id == style.id }" class="thumbnail" style="width: 40px;"
-                        @click="setStyle(s.id)" />
+                    <img v-if="s.frame.background.startsWith('http') || s.frame.background.startsWith('data')"
+                        :src="s.frame.background" :class="{ 'active': s.id == style.id }" alt="Frame 1" class="thumbnail"
+                        @click="setStyle(s.id)">
+                    <div v-else :style="{ 'background-color': s.frame.background }" :class="{ 'active': s.id == style.id }"
+                        class="thumbnail" style="width: 40px;" @click="setStyle(s.id)" />
                 </template>
                 <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
             </div>
@@ -285,7 +344,6 @@ function downloadAsFile() {
 </template>
 
 <style scoped>
-
 .container {
     display: grid;
     grid-template-columns: auto;
