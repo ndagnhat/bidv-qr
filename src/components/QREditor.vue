@@ -1,293 +1,157 @@
 <script setup>
 import { ref, onMounted, watch, reactive } from 'vue';
 import { fabric } from 'fabric';
-import listStyleDatas from '../qrstyles/styles.js'
+import listCanvasJson from '../qrstyles/styles.js'
+import { withBase } from 'vitepress'
 
-const props = defineProps(['qrdata', 'bankName', 'accountNo', 'accountName']);
-const style = reactive({
-    id: 0,
-    editable: false,
-    frame: {
-        background: null,
-        width: 1000,
-        height: 1000
-    },
-    qrcode: {
-        visible: true,
-        centerV: null,
-        centerH: null,
-        top: null,
-        left: null,
-        width: 800, 
-        height: 800
-    },
-    bank: {
-        visble: true,
-        centerV: null,
-        centerH: null,
-        top: null,
-        left: null,
-        color: null, 
-        fontSize: null,
-        fontFamily: null
-    },
-    accountNo: {
-        visble: true,
-        centerV: null,
-        centerH: null,
-        top: null,
-        left: null,
-        color: null, 
-        fontSize: null,
-        fontFamily: null
-    },
-    accountName: {
-        visble: true,
-        centerV: null,
-        centerH: null,
-        top: null,
-        left: null,
-        color: null, 
-        fontSize: null,
-        fontFamily: null
-    }
-});
+const props = defineProps(['qrdata', 'bankIcon', 'bankName', 'accountNo', 'accountName']);
 
-const listStyles = ref({});
-const qrview = ref(null);
-const styleIndex = ref(true);
-
-let fonts = ['Chinese Quotes', 'Inter var', 'Inter', 'Segoe UI'];
 let canvas = null;
-let canvasQRCode = null;
-let canvasBankTitle = null;
-let canvasAccountNoTitle = null;
-let canvasAccountNameTitle = null;
+const frameSelected = ref(null);
+
+const visibleBankIcon = ref(null);
+const visibleBankTitle = ref(null);
+const visibleAccountNoTitle = ref(null);
+const visibleAccountNameTitle = ref(null);
+
+const selFormatType = ref("png");
 
 onMounted(() => {
-    listStyles.value = listStyleDatas;
-    let qrviewWidth = qrview.value.clientWidth;
-    canvas = new fabric.Canvas("canvas", { backgroundColor: "#ffffff", width: 1000, height: 1000 });
-    canvas.setZoom(qrviewWidth / 1000);
-    canvas.setWidth(qrviewWidth);
-    canvas.setHeight(qrviewWidth);
-    fabric.Image.fromURL(props.qrdata, function (img) {
-        canvasQRCode = img;
-        canvasBankTitle = new fabric.Text(props.bankName);
-        canvasAccountNoTitle = new fabric.Text(props.accountNo);
-        canvasAccountNameTitle = new fabric.Text(props.accountName);
-        // canvasQRCode.visible = false;
-        // canvasBankTitle.visible = false;
-        // canvasAccountNoTitle.visible = false;
-        // canvasAccountNameTitle.visible = false;
-        canvas.add(canvasQRCode);
-        canvas.add(canvasBankTitle);
-        canvas.add(canvasAccountNoTitle);
-        canvas.add(canvasAccountNameTitle);
-        canvas.renderAll();
-        setStyle(1);
-    }, {
-        crossOrigin: 'anonymous'
-    });
+    canvas = new fabric.Canvas("canvas");
+    loadCanvasFrame(0);
 });
 
-function setStyle(styleid) {
-    const styleData = listStyleDatas.find((s) => s.id == styleid);
-    style.id = styleData.id;
-    style.editable = styleData.editable;
-    style.frame.background = styleData.frame.background;
-    style.frame.width = styleData.frame.width
-    style.frame.height = styleData.frame.height
-    style.qrcode.centerH = styleData.qrcode.centerH
-    style.qrcode.centerV = styleData.qrcode.centerV
-    style.qrcode.top = styleData.qrcode.top
-    style.qrcode.left = styleData.qrcode.left
-    style.qrcode.width = styleData.qrcode.width
-    style.qrcode.height = styleData.qrcode.height
-    style.bank.visble = styleData.bank.visble
-    style.bank.centerH = styleData.bank.centerH
-    style.bank.centerH = styleData.bank.centerH
-    style.bank.top = styleData.bank.top
-    style.bank.left = styleData.bank.left
-    style.bank.fontSize = styleData.bank.fontSize,
-    style.bank.fontFamily = styleData.bank.fontFamily
-    style.accountNo.visble = styleData.accountNo.visble
-    style.accountNo.centerH = styleData.accountNo.centerH
-    style.accountNo.centerH = styleData.accountNo.centerH
-    style.accountNo.top = styleData.accountNo.top
-    style.accountNo.left = styleData.accountNo.left
-    style.accountNo.fontSize = styleData.accountNo.fontSize,
-    style.accountNo.fontFamily = styleData.accountNo.fontFamily
-    style.accountName.visble = styleData.accountName.visble
-    style.accountName.centerH = styleData.accountName.centerH
-    style.accountName.centerH = styleData.accountName.centerH
-    style.accountName.top = styleData.accountName.top
-    style.accountName.left = styleData.accountName.left
-    style.baccountNameank.fontSize = styleData.baccountNameank.fontSize,
-    style.accountName.fontFamily = styleData.accountName.fontFamily
+function loadCanvasFromJson(json) {
+    let width = json.canvasWidth;
+    let height = json.canvasHeight;
+    if (width == null || height == null) {
+        if (json.backgroundImage != null) {
+            width = json.backgroundImage.width;
+            height = json.backgroundImage.height;
+        }
+    }
+    if (width == null || height == null) {
+        width = 1000;
+        height = 1200;
+    }
 
-    styleIndex.value = !styleIndex.value;
-    //style.value = styleData;
+    let displayWidth = document.getElementById('qrview').offsetWidth;
+    let displayHeight = displayWidth / width * height;
 
-    // let style = listStyles.value[index];
-    // styleCanvas.value = style.frame;
-    // styleQRCode.value = style.qrcode;
-    // styleBankTitle.value = style.bankTitle;
-    // styleAccountNoTitle.value = style.accountNoTitle;
-    // styleAccountNameTitle.value = style.accountNameTitle;
-    // styleIndex.value = index;
+    canvas.setZoom(displayWidth / width);
+    canvas.setWidth(displayWidth);
+    canvas.setHeight(displayHeight);
+    canvas.loadFromJSON(json);
+    canvas.renderAll();
 }
 
-watch(style, (newStyle) => {
-    // canvas style
-    let s = newStyle;
-    if (s.frame.background == null) {
-        canvas.setBackgroundImage(null);
-        canvas.setBackgroundColor("null");
-        if (s.frame.width != null && s.frame.height != null) {
-            let canvasZoom = qrview.value.clientWidth / canvasWidth;
-            let canvasZoomWidth = s.frame.height * canvasZoom;
-            let canvasZoomHeight = s.frame.height * canvasZoom;
-            canvas.setZoom(canvasZoom);
-            canvas.setWidth(canvasZoomWidth);
-            canvas.setHeight(canvasZoomHeight);
-        }
-    } else {
-        let canvasWidth = s.frame.width;
-        let canvasHeight = s.frame.height;
-        if (s.frame.background.startsWith("http") || s.frame.background.startsWith("data")) {
-            fabric.Image.fromURL(s.frame.background, function (img) {
-                if (canvasWidth == null || canvasHeight == null) {
-                    canvasWidth = img.width;
-                    canvasHeight = img.height;
-                }
-                canvas.setBackgroundImage(img);
-                let canvasZoom = qrview.value.clientWidth / canvasWidth;
-                let canvasZoomWidth = canvasWidth * canvasZoom;
-                let canvasZoomHeight = canvasHeight * canvasZoom;
-                canvas.setZoom(canvasZoom);
-                canvas.setWidth(canvasZoomWidth);
-                canvas.setHeight(canvasZoomHeight);
-                canvas.renderAll();
-            }, {
-                crossOrigin: 'anonymous'
-            });
-        } else {
-            canvas.setBackgroundImage(null);
-            canvas.setBackgroundColor(s.frame.background);
-            if (canvasWidth == null || canvasHeight == null) {
-                canvasWidth = 1000;
-                canvasHeight = 1200;
+function updateCanvasOjbect(objId, objProp, objValue) {
+    let json = canvas.toDatalessJSON(["id", "canvasWidth", "canvasHeight", "selectable"]);
+    let reload = false;
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === objId) {
+            if (json.objects[i][objProp] != objValue) {
+                json.objects[i][objProp] = objValue;
+                reload = true;
             }
-            let canvasZoom = qrview.value.clientWidth / canvasWidth;
-            let canvasZoomWidth = canvasWidth * canvasZoom;
-            let canvasZoomHeight = canvasHeight * canvasZoom;
-            canvas.setZoom(canvasZoom);
-            canvas.setWidth(canvasZoomWidth);
-            canvas.setHeight(canvasZoomHeight);
+            break;
+        }
+    }
+    if (reload) {
+        loadCanvasFromJson(json);
+    }
+}
+
+function loadCanvasFrame(id) {
+    let json = listCanvasJson.find((s) => s.id == id);
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "qrcode") {
+            json.objects[i].src = props.qrdata ?? "";
+        }
+        if (json.objects[i].id === "bankIcon") {
+            json.objects[i].src = props.bankIcon ?? "";
+        }
+        if (json.objects[i].id === "bankName") {
+            json.objects[i].text = props.bankName ?? "";
+        }
+        if (json.objects[i].id === "accountNo") {
+            json.objects[i].text = props.accountNo ?? "";
+        }
+        if (json.objects[i].id === "accountName") {
+            json.objects[i].text = props.accountName ?? "";
         }
     }
 
-    // qrcode style
-    if (canvasQRCode != null) {
-        if (s.qrcode.visible != null) {
-            canvasQRCode.visible = s.qrcode.visible;
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "bankIcon") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleBankIcon.value != json.objects[i].visible) {
+                visibleBankIcon.value = json.objects[i].visible;
+            }
+            break;
         }
-        if (s.qrcode.top != null) {
-            canvasQRCode.top = s.qrcode.top;
-            canvasQRCode.setCoords();
+        if (i == json.objects.length - 1) {
+            if (visibleBankIcon.value != null) {
+                visibleBankIcon.value = null;
+            }
         }
-        if (s.qrcode.left != null) {
-            canvasQRCode.left = s.qrcode.left;
-            canvasQRCode.setCoords();
-        }
-        if (s.qrcode.width != null) {
-            canvasQRCode.scaleX = s.qrcode.width / canvasQRCode.width;
-        }
-        if (s.qrcode.height != null) {
-            canvasQRCode.scaleY = s.qrcode.height / canvasQRCode.height;
-        }
-        canvasQRCode.visible = true;
     }
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "bankName") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleBankTitle.value != json.objects[i].visible) {
+                visibleBankTitle.value = json.objects[i].visible;
+            }
+            break;
+        }
+        if (i == json.objects.length - 1) {
+            if (visibleBankTitle.value != null) {
+                visibleBankTitle.value = null;
+            }
+        }
+    }
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "accountNo") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleAccountNoTitle.value != json.objects[i].visible) {
+                visibleAccountNoTitle.value = json.objects[i].visible;
+            }
+            break;
+        }
+        if (i == json.objects.length - 1) {
+            if (visibleAccountNoTitle.value != null) {
+                visibleAccountNoTitle.value = null;
+            }
+        }
+    }
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "accountName") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleAccountNameTitle.value != json.objects[i].visible) {
+                visibleAccountNameTitle.value = json.objects[i].visible;
+            }
+            break;
+        }
+        if (i == json.objects.length - 1) {
+            if (visibleAccountNameTitle.value != null) {
+                visibleAccountNameTitle.value = null;
+            }
+        }
+    }
+    loadCanvasFromJson(json);
+    frameSelected.value = id;
+}
 
-    // bank title style
-    if (canvasBankTitle != null) {
-        if (s.bank.visible != null) {
-            canvasBankTitle.visible = s.bank.visible;
-        }
-        if (s.bank.top != null) {
-            canvasBankTitle.top = s.bank.top;
-            canvasBankTitle.setCoords();
-        }
-        if (s.bank.left != null) {
-            canvasBankTitle.left = s.bank.left;
-            canvasBankTitle.setCoords();
-        }
-        if (s.bank.color != null) {
-            canvasBankTitle.fill = s.bank.color;
-        }
-        if (s.bank.fontSize != null) {
-            canvasBankTitle.fontSize = s.bank.fontSize;
-        }
-        if (s.bank.fontFamily != null) {
-            canvasBankTitle.fontFamily = s.bank.fontFamily;
-        }
-        if (s.bank.visible != null) {
-            canvasBankTitle.visible = s.bank.visible;
-        }
-    }
-
-    // account no title style
-    if (canvasAccountNoTitle != null) {
-        if (s.accountNo.visible != null) {
-            canvasAccountNoTitle.visible = s.accountNo.visible;
-        }
-        if (s.accountNo.top != null) {
-            canvasAccountNoTitle.top = s.accountNo.top;
-            canvasAccountNoTitle.setCoords();
-        }
-        if (s.accountNo.left != null) {
-            canvasAccountNoTitle.left = s.accountNo.left;
-            canvasAccountNoTitle.setCoords();
-        }
-        if (s.accountNo.color != null) {
-            canvasAccountNoTitle.fill = s.accountNo.color;
-        }
-        if (s.accountNo.fontSize != null) {
-            canvasAccountNoTitle.fontSize = s.accountNo.fontSize;
-        }
-        if (s.accountNo.fontFamily != null) {
-            canvasAccountNoTitle.fontFamily = s.accountNo.fontFamily;
-        }
-        if (s.accountNo.visible != null) {
-            canvasAccountNoTitle.visible = s.accountNo.visible;
-        }
-    }
-
-    // account name title style
-    if (canvasAccountNameTitle != null) {
-        if (s.accountName.visible != null) {
-            canvasAccountNameTitle.visible = s.accountName.visible;
-        }
-        if (s.accountName.top != null) {
-            canvasAccountNameTitle.top = s.accountName.top;
-            canvasAccountNameTitle.setCoords();
-        }
-        if (s.accountName.left != null) {
-            canvasAccountNameTitle.left = s.accountName.left;
-            canvasAccountNameTitle.setCoords();
-        }
-        if (s.accountName.color != null) {
-            canvasAccountNameTitle.fill = s.accountName.color;
-        }
-        if (s.accountName.fontSize != null) {
-            canvasAccountNameTitle.fontSize = s.accountName.fontSize;
-        }
-        if (s.accountName.fontFamily != null) {
-            canvasAccountNameTitle.fontFamily = s.accountName.fontFamily;
-        }
-    }
-    canvas.renderAll();
+watch(visibleBankTitle, (isVisible) => {
+    updateCanvasOjbect("bankName", "visible", isVisible);
 });
 
 function onFileChange(e) {
@@ -318,25 +182,56 @@ function downloadAsFile() {
 <template>
     <div class="container">
         <div class="qrtool">
-            <h6>Select a frame</h6>
+            <h3>Chọn 1 mẫu</h3>
             <div class="row">
-                <template v-for="s in listStyleDatas">
-                    <img v-if="s.frame.background.startsWith('http') || s.frame.background.startsWith('data')"
-                        :src="s.frame.background" :class="{ 'active': s.id == style.id }" alt="Frame 1" class="thumbnail"
-                        @click="setStyle(s.id)">
-                    <div v-else :style="{ 'background-color': s.frame.background }" :class="{ 'active': s.id == style.id }"
-                        class="thumbnail" style="width: 40px;" @click="setStyle(s.id)" />
+                <template v-for="data in listCanvasJson">
+                    <img v-if="data.backgroundImage != null" :src="data.backgroundImage.src"
+                        :class="{ 'active': data.id == frameSelected }" alt="Frame 1" class="thumbnail"
+                        @click="loadCanvasFrame(data.id)">
+                    <div v-else :style="{ 'background-color': data.background }"
+                        :class="{ 'active': data.id == frameSelected }" class="thumbnail" style="width: 40px;"
+                        @click="loadCanvasFrame(data.id)" />
                 </template>
-                <input type="file" accept="image/*" @change="onFileChange" title="abc" class="thumbnail">
+                <div class="add-frame-button"> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M18.9,10.9h-6v-6c0-0.6-0.4-1-1-1s-1,0.4-1,1v6h-6c-0.6,0-1,0.4-1,1s0.4,1,1,1h6v6c0,0.6,0.4,1,1,1s1-0.4,1-1v-6h6c0.6,0,1-0.4,1-1S19.5,10.9,18.9,10.9z" />
+                    </svg></div>
+                <input type="file" accept="image/*" @change="onFileChange" title="abc" class="w3-hide">
             </div>
-            <h6>Bank name title</h6>
-            <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="style.qrcode.visble">
-            <label class="accept-label" for="ckbBankVisible"> {{ style.qrcode.visble }}</label>
-            <button class="w3-btn w3-round-xxlarge w3-brand" @click="selectFrame1">TestFrame</button>
-            <button class="w3-btn w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
+            <div v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNoTitle != null || visibleAccountNameTitle != null">
+                <h3>Ẩn/hiện thông tin tài khoản</h3>
+                <div v-if="visibleBankIcon != null">
+                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleBankIcon">
+                    <label class="accept-label" for="ckbBankVisible">Bank icon</label>
+                </div>
+                <div v-if="visibleBankTitle != null">
+                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleBankTitle">
+                    <label class="accept-label" for="ckbBankVisible">Bank title</label>
+                </div>
+                <div v-if="visibleAccountNoTitle != null">
+                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleAccountNoTitle">
+                    <label class="accept-label" for="ckbBankVisible">Account No title</label>
+                </div>
+                <div v-if="visibleAccountNameTitle != null">
+                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleAccountNameTitle">
+                    <label class="accept-label" for="ckbBankVisible">Account Name title</label>
+                </div>
+            </div>
+            <div>
+                <h3>Định dạng file tải xuống</h3>
+                <select name="filte-type" v-model="selFormatType" class="w3-input w3-border w3-hover-border w3-round-large">
+                    <option value="png"> PNG </option>
+                    <option value="jpg"> JPG </option>
+                    <option value="svg"> SVG </option>
+                </select>
+            </div>
+            <div style="margin-top: 32px;">
+                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
+            </div>
         </div>
         <div class="qrview w3-round-xlarge">
-            <div ref="qrview">
+            <div id="qrview">
                 <div style="margin: 0; padding: 0;"><canvas id="canvas"></canvas></div>
             </div>
         </div>
@@ -346,29 +241,67 @@ function downloadAsFile() {
 <style scoped>
 .container {
     display: grid;
-    grid-template-columns: auto;
     padding: 10px 16px;
-    align-items: center;
+}
+.qrtool {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.qrview {
+    grid-column: 1;
+    grid-row: 1;
+    overflow: auto;
+    padding: 24px;
+    background-color: var(--vp-sidebar-bg-color);
 }
 
 @media (min-width: 768px) {
     .container {
         grid-template-columns: 3fr 7fr;
         gap: 16px;
+        }
+    .qrtool {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .qrview {
+        grid-column: 2;
+        grid-row: 1;
     }
 }
 
-.qrview {
-    overflow: auto;
-    padding: 24px;
-    background-color: var(--vp-sidebar-bg-color);
+
+.canvas-container {
+    border: 1px dotted #ccc;
+    display: inline-block;
+    vertical-align: top;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+
 
 .row::after {
     content: "";
     clear: both;
     display: block;
 }
+
+.add-frame-button {
+    fill: var(--vp-c-text-1);
+    border-radius: 6px;
+    padding: 0;
+    margin: 5px;
+    height: 40px;
+    width: 40px;
+    float: left;
+}
+
+.add-frame-button:hover {
+    box-shadow: 0 0 2px 1px var(--vp-c-brand);
+}
+
 
 .thumbnail {
     border: 4px solid var(--vp-c-border);
@@ -385,5 +318,4 @@ function downloadAsFile() {
 
 .thumbnail.active {
     box-shadow: 0 0 2px 2px var(--vp-c-brand);
-}
-</style>
+}</style>
