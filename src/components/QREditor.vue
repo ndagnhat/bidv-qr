@@ -177,6 +177,12 @@ function downloadAsFile() {
     document.body.removeChild(link)
 }
 
+function shareFile() {
+    
+        let dataText = { files: [], text: text, url: URL, title: TITLE };
+        navigator.share(dataText);
+}
+
 </script>
 
 <template>
@@ -228,6 +234,7 @@ function downloadAsFile() {
             </div>
             <div style="margin-top: 32px;">
                 <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
+                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareFile" style="margin-left: 15px;">Share</button>
             </div>
         </div>
         <div class="qrview w3-round-xlarge">
