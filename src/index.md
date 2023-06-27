@@ -5,14 +5,11 @@ layout: home
 hero:
   name: "BIDV QR"
   text: "QR code generator"
-  tagline: My great project tagline
+  tagline: Mô tả tool abc xyz
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Tạo QR
+      link: /generate-qrcode-payment
 
 features:
   - title: Feature A
