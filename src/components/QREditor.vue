@@ -170,17 +170,54 @@ function onFileChange(e) {
 
 function downloadAsFile() {
     const link = document.createElement('a')
-    link.href = canvas.toDataURL({ format: 'pgn', multiplier: (1 / canvas.getZoom()) })
+    link.href = canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) })
     link.download = 'qrcode.png'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
 }
 
+async function shareImage() {
+  const response = await fetch(canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) }));
+  const blob = await response.blob();
+  const filesArray = [
+    new File(
+      [blob],
+      'meme.jpg',
+      {
+        type: "image/jpeg",
+        lastModified: new Date().getTime()
+      }
+   )
+  ];
+  const shareData = {
+    files: filesArray,
+  };
+  navigator.share(shareData);
+}
+
 function shareFile() {
-    
-        let dataText = { files: [], text: text, url: URL, title: TITLE };
-        navigator.share(dataText);
+
+    var data = canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) });
+    let files = new Blob([data], { type: "octet/stream" });
+
+    navigator.share({
+        files,
+        title: "Images",
+        text: "Beautiful images",
+    }).then(() => console.log('Image shared successfully.')).catch((error) => console.error('Error sharing image:'));
+
+
+    // var imageUrl = canvas.toDataURL({ format: 'pgn', multiplier: (1 / canvas.getZoom()) });
+    // if (navigator.share && imageUrl) {
+    //     navigator.share({
+    //         files: [imageUrl],
+    //     })
+    //         .then(() => console.log('Image shared successfully.'))
+    //         .catch((error) => console.error('Error sharing image:', error));
+    // } else {
+    //     console.error('Image sharing not supported on this device or image URL is not provided.');
+    // }
 }
 
 </script>
@@ -205,7 +242,8 @@ function shareFile() {
                     </svg></div>
                 <input type="file" accept="image/*" @change="onFileChange" title="abc" class="w3-hide">
             </div>
-            <div v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNoTitle != null || visibleAccountNameTitle != null">
+            <div
+                v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNoTitle != null || visibleAccountNameTitle != null">
                 <h3>Ẩn/hiện thông tin tài khoản</h3>
                 <div v-if="visibleBankIcon != null">
                     <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleBankIcon">
@@ -234,7 +272,8 @@ function shareFile() {
             </div>
             <div style="margin-top: 32px;">
                 <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
-                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareFile" style="margin-left: 15px;">Share</button>
+                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareImage"
+                    style="margin-left: 15px;">Share</button>
             </div>
         </div>
         <div class="qrview w3-round-xlarge">
@@ -250,6 +289,7 @@ function shareFile() {
     display: grid;
     padding: 10px 16px;
 }
+
 .qrtool {
     grid-column: 1;
     grid-row: 2;
@@ -267,7 +307,8 @@ function shareFile() {
     .container {
         grid-template-columns: 3fr 7fr;
         gap: 16px;
-        }
+    }
+
     .qrtool {
         grid-column: 1;
         grid-row: 1;
@@ -325,4 +366,5 @@ function shareFile() {
 
 .thumbnail.active {
     box-shadow: 0 0 2px 2px var(--vp-c-brand);
-}</style>
+}
+</style>
