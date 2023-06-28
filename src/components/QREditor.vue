@@ -169,12 +169,21 @@ function onFileChange(e) {
 }
 
 function downloadAsFile() {
-    const link = document.createElement('a')
-    link.href = canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) })
-    link.download = 'qrcode.png'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    if (selFormatType.value == 'json') {
+        const link = document.createElement('a')
+        link.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(canvas.toDatalessJSON(["id", "canvasWidth", "canvasHeight", "selectable"])));
+        link.download = 'style.json';
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    } else {
+        const link = document.createElement('a')
+        link.href = canvas.toDataURL({ format: selFormatType.value, multiplier: (1 / canvas.getZoom()) })
+        link.download = 'qrcode.' + selFormatType.value;
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
 }
 
 async function shareImage() {
@@ -194,160 +203,6 @@ async function shareImage() {
         files: filesArray,
     };
     navigator.share(shareData);
-}
-
-function shareFile() {
-    let json = {
-    "id": 0,
-    "objects": [
-        {
-            "id": "bankIcon",
-            "type": "image",
-            "originX": "left",
-            "originY": "top",
-            "left": 57,
-            "top": 67,
-            "scaleX": 0.4,
-            "scaleY": 0.4,
-            "src": "",
-            "crossOrigin": "anonymous"
-        },
-        {
-            "id": "bankName",
-            "type": "i-text",
-            "originX": "left",
-            "originY": "top",
-            "left": 350,
-            "top": 115,
-            "fill": "#3c454c",
-            "fontFamily": "helvetica",
-            "fontWeight": "",
-            "fontSize": 42,
-            "text": ""
-        },
-        {
-            "id": "qrcode",
-            "type": "image",
-            "originX": "left",
-            "originY": "top",
-            "left": 57,
-            "top": 67,
-            "scaleX": 1.4,
-            "scaleY": 1.4,
-            "src": "",
-            "crossOrigin": "anonymous"
-        },
-    ],
-    "backgroundImage": {
-        "type": "image",
-        "width": 1367,
-        "height": 1939,
-        "src": "/bidv-qr/b2y.png",
-    }
-};
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "qrcode") {
-            json.objects[i].src = props.qrdata ?? "";
-        }
-        if (json.objects[i].id === "bankIcon") {
-            json.objects[i].src = props.bankIcon ?? "";
-        }
-        if (json.objects[i].id === "bankName") {
-            json.objects[i].text = props.bankName ?? "";
-        }
-        if (json.objects[i].id === "accountNo") {
-            json.objects[i].text = props.accountNo ?? "";
-        }
-        if (json.objects[i].id === "accountName") {
-            json.objects[i].text = props.accountName ?? "";
-        }
-    }
-
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "bankIcon") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleBankIcon.value != json.objects[i].visible) {
-                visibleBankIcon.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleBankIcon.value != null) {
-                visibleBankIcon.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "bankName") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleBankTitle.value != json.objects[i].visible) {
-                visibleBankTitle.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleBankTitle.value != null) {
-                visibleBankTitle.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "accountNo") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleAccountNoTitle.value != json.objects[i].visible) {
-                visibleAccountNoTitle.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleAccountNoTitle.value != null) {
-                visibleAccountNoTitle.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "accountName") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleAccountNameTitle.value != json.objects[i].visible) {
-                visibleAccountNameTitle.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleAccountNameTitle.value != null) {
-                visibleAccountNameTitle.value = null;
-            }
-        }
-    }
-    loadCanvasFromJson(json);
-    // var data = canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) });
-    // let files = new Blob([data], { type: "octet/stream" });
-
-    // navigator.share({
-    //     files,
-    //     title: "Images",
-    //     text: "Beautiful images",
-    // }).then(() => console.log('Image shared successfully.')).catch((error) => console.error('Error sharing image:'));
-
-
-    // var imageUrl = canvas.toDataURL({ format: 'pgn', multiplier: (1 / canvas.getZoom()) });
-    // if (navigator.share && imageUrl) {
-    //     navigator.share({
-    //         files: [imageUrl],
-    //     })
-    //         .then(() => console.log('Image shared successfully.'))
-    //         .catch((error) => console.error('Error sharing image:', error));
-    // } else {
-    //     console.error('Image sharing not supported on this device or image URL is not provided.');
-    // }
 }
 
 </script>
@@ -398,12 +253,12 @@ function shareFile() {
                     <option value="png"> PNG </option>
                     <option value="jpg"> JPG </option>
                     <option value="svg"> SVG </option>
+                    <option value="json"> JSON </option>
                 </select>
             </div>
             <div style="margin-top: 32px;">
                 <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
-                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareFile"
-                    style="margin-left: 15px;">Share</button>
+                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareImage" style="margin-left: 15px;">Share</button>
             </div>
         </div>
         <div class="qrview w3-round-xlarge">
