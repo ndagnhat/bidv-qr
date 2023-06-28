@@ -1,5 +1,5 @@
 export default [{
-    "id": 0,
+    "id": 1,
     "objects": [
         {
             "id": "qrcode",
@@ -11,7 +11,7 @@ export default [{
             "top": 0,
             "width": 490,
             "height": 490,
-            "src": "https://img.vietqr.io/image/BIDV-123-xyzWuLb.png?amount=&addInfo=&accountName=",
+            "src": "",
             "crossOrigin": "anonymous",
         }
     ],
@@ -20,81 +20,40 @@ export default [{
     "canvasHeight": 490
 }, 
 {
-    "id": 1,
+    "id": 0,
     "objects": [
         {
-
+            "id": "bankIcon",
             "type": "image",
             "originX": "left",
             "originY": "top",
-            "left": 0,
-            "top": 0,
-            "width": 490,
-            "height": 490,
-            "scaleX": 0.34,
-            "scaleY": 0.34,
-            "src": "qrcode",
-            "crossOrigin": "anonymous",
-        }, {
+            "left": 57,
+            "top": 67,
+            "scaleX": 0.4,
+            "scaleY": 0.4,
+            "src": "",
+            "crossOrigin": "anonymous"
+        },
+        {
+            "id": "bankName",
             "type": "i-text",
-            "version": "abc",
             "originX": "left",
             "originY": "top",
-            "left": 0,
-            "top": 0,
-            "width": 598.13,
-            "height": 202.5,
+            "left": 420,
+            "top": 130,
             "fill": "#3c454c",
-            "stroke": null,
-            "strokeWidth": 1,
-            "strokeDashArray": null,
-            "strokeLineCap": "butt",
-            "strokeDashOffset": 0,
-            "strokeLineJoin": "miter",
-            "strokeUniform": false,
-            "strokeMiterLimit": 4,
-            "scaleX": 0.5,
-            "scaleY": 0.5,
-            "angle": -4,
-            "flipX": false,
-            "flipY": false,
-            "opacity": 1,
-            "shadow": null,
-            "visible": true,
-            "backgroundColor": "",
-            "fillRule": "nonzero",
-            "paintFirst": "fill",
-            "globalCompositeOperation": "source-over",
-            "skewX": 0,
-            "skewY": 0,
             "fontFamily": "helvetica",
             "fontWeight": "",
             "fontSize": 40,
-            "text": "bank",
-            "underline": false,
-            "overline": false,
-            "linethrough": false,
-            "textAlign": "left",
-            "fontStyle": "normal",
-            "lineHeight": 1.16,
-            "textBackgroundColor": "",
-            "charSpacing": 0,
-            "styles": [],
-            "direction": "ltr",
-            "path": null,
-            "pathStartOffset": 0,
-            "pathSide": "left",
-            "pathAlign": "baseline"
+            "text": ""
         }
     ],
-    "background": "#ffffff",
     "backgroundImage": {
         "type": "image",
-        "width": 490,
-        "height": 490,
-        "src": "https://img.vietqr.io/image/BIDV-123-xyzWuLb.png?amount=&addInfo=&accountName=",
-        "crossOrigin": "anonymous"
-    },
+        "width": 1367,
+        "height": 1939,
+        "src": "/bidv-qr/b2y.png",
+    }
 },
 {
     "id": 2,
@@ -189,5 +148,13 @@ export default [{
             "pathAlign": "baseline"
         }
     ],
+    "background": "#ffffff",
+    "backgroundImage": {
+        "type": "image",
+        "width": 690,
+        "height": 490,
+        "src": "https://img.vietqr.io/image/BIDV-123-xyzWuLb.png?amount=&addInfo=&accountName=",
+        "crossOrigin": "anonymous"
+    },
 }
 ]

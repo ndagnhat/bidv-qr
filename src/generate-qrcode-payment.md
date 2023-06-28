@@ -40,7 +40,7 @@ Generate qr code description
 ---------------------------------------------------------------------
 <h2 :class="{'w3-disabled': step < 3}">Customize and Download</h2>
 <div v-if="step == 3">
-    <QREditor v-if="qrData.type =='payment'" :qrdata="qrData.qr" :bankName="qrData.bank" :accountNo="qrData.accountNo" :accountName="qrData.accountName" />
+    <QREditor v-if="qrData.type =='payment'" :qrdata="qrData.qr" :bankIcon="qrData.bankIcon" :bankName="qrData.bankName" :accountNo="qrData.accountNo" :accountName="qrData.accountName" />
 </div>
 
 ---------------------------------------------------------------------

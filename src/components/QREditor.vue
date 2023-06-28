@@ -178,34 +178,164 @@ function downloadAsFile() {
 }
 
 async function shareImage() {
-  const response = await fetch(canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) }));
-  const blob = await response.blob();
-  const filesArray = [
-    new File(
-      [blob],
-      'meme.jpg',
-      {
-        type: "image/jpeg",
-        lastModified: new Date().getTime()
-      }
-   )
-  ];
-  const shareData = {
-    files: filesArray,
-  };
-  navigator.share(shareData);
+    const response = await fetch(canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) }));
+    const blob = await response.blob();
+    const filesArray = [
+        new File(
+            [blob],
+            'meme.jpg',
+            {
+                type: "image/jpeg",
+                lastModified: new Date().getTime()
+            }
+        )
+    ];
+    const shareData = {
+        files: filesArray,
+    };
+    navigator.share(shareData);
 }
 
 function shareFile() {
+    let json = {
+    "id": 0,
+    "objects": [
+        {
+            "id": "bankIcon",
+            "type": "image",
+            "originX": "left",
+            "originY": "top",
+            "left": 57,
+            "top": 67,
+            "scaleX": 0.4,
+            "scaleY": 0.4,
+            "src": "",
+            "crossOrigin": "anonymous"
+        },
+        {
+            "id": "bankName",
+            "type": "i-text",
+            "originX": "left",
+            "originY": "top",
+            "left": 350,
+            "top": 115,
+            "fill": "#3c454c",
+            "fontFamily": "helvetica",
+            "fontWeight": "",
+            "fontSize": 42,
+            "text": ""
+        },
+        {
+            "id": "qrcode",
+            "type": "image",
+            "originX": "left",
+            "originY": "top",
+            "left": 57,
+            "top": 67,
+            "scaleX": 1.4,
+            "scaleY": 1.4,
+            "src": "",
+            "crossOrigin": "anonymous"
+        },
+    ],
+    "backgroundImage": {
+        "type": "image",
+        "width": 1367,
+        "height": 1939,
+        "src": "/bidv-qr/b2y.png",
+    }
+};
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "qrcode") {
+            json.objects[i].src = props.qrdata ?? "";
+        }
+        if (json.objects[i].id === "bankIcon") {
+            json.objects[i].src = props.bankIcon ?? "";
+        }
+        if (json.objects[i].id === "bankName") {
+            json.objects[i].text = props.bankName ?? "";
+        }
+        if (json.objects[i].id === "accountNo") {
+            json.objects[i].text = props.accountNo ?? "";
+        }
+        if (json.objects[i].id === "accountName") {
+            json.objects[i].text = props.accountName ?? "";
+        }
+    }
 
-    var data = canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) });
-    let files = new Blob([data], { type: "octet/stream" });
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "bankIcon") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleBankIcon.value != json.objects[i].visible) {
+                visibleBankIcon.value = json.objects[i].visible;
+            }
+            break;
+        }
+        if (i == json.objects.length - 1) {
+            if (visibleBankIcon.value != null) {
+                visibleBankIcon.value = null;
+            }
+        }
+    }
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "bankName") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleBankTitle.value != json.objects[i].visible) {
+                visibleBankTitle.value = json.objects[i].visible;
+            }
+            break;
+        }
+        if (i == json.objects.length - 1) {
+            if (visibleBankTitle.value != null) {
+                visibleBankTitle.value = null;
+            }
+        }
+    }
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "accountNo") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleAccountNoTitle.value != json.objects[i].visible) {
+                visibleAccountNoTitle.value = json.objects[i].visible;
+            }
+            break;
+        }
+        if (i == json.objects.length - 1) {
+            if (visibleAccountNoTitle.value != null) {
+                visibleAccountNoTitle.value = null;
+            }
+        }
+    }
+    for (var i = 0; i < json.objects.length; i++) {
+        if (json.objects[i].id === "accountName") {
+            if (json.objects[i].visible == null) {
+                json.objects[i].visible = true;
+            }
+            if (visibleAccountNameTitle.value != json.objects[i].visible) {
+                visibleAccountNameTitle.value = json.objects[i].visible;
+            }
+            break;
+        }
+        if (i == json.objects.length - 1) {
+            if (visibleAccountNameTitle.value != null) {
+                visibleAccountNameTitle.value = null;
+            }
+        }
+    }
+    loadCanvasFromJson(json);
+    // var data = canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) });
+    // let files = new Blob([data], { type: "octet/stream" });
 
-    navigator.share({
-        files,
-        title: "Images",
-        text: "Beautiful images",
-    }).then(() => console.log('Image shared successfully.')).catch((error) => console.error('Error sharing image:'));
+    // navigator.share({
+    //     files,
+    //     title: "Images",
+    //     text: "Beautiful images",
+    // }).then(() => console.log('Image shared successfully.')).catch((error) => console.error('Error sharing image:'));
 
 
     // var imageUrl = canvas.toDataURL({ format: 'pgn', multiplier: (1 / canvas.getZoom()) });
@@ -272,7 +402,7 @@ function shareFile() {
             </div>
             <div style="margin-top: 32px;">
                 <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
-                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareImage"
+                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareFile"
                     style="margin-left: 15px;">Share</button>
             </div>
         </div>
