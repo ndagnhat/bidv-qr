@@ -196,14 +196,14 @@ function downloadAsFile() {
 }
 
 async function shareImage() {
-    const response = await fetch(canvas.toDataURL({ format: 'png', multiplier: (1 / canvas.getZoom()) }));
+    const response = await fetch(canvas.toDataURL({ format: selFormatType.value, multiplier: (1 / canvas.getZoom()) }));
     const blob = await response.blob();
     const filesArray = [
         new File(
             [blob],
-            'meme.jpg',
+            'qrcode.' + selFormatType.value,
             {
-                type: "image/jpeg",
+                type: "image/" + selFormatType.value,
                 lastModified: new Date().getTime()
             }
         )
