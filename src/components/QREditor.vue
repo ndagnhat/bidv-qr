@@ -10,9 +10,9 @@ let canvas = null;
 const frameSelected = ref(null);
 
 const visibleBankIcon = ref(null);
-const visibleBankTitle = ref(null);
-const visibleAccountNoTitle = ref(null);
-const visibleAccountNameTitle = ref(null);
+const visibleBankName = ref(null);
+const visibleAccountNo = ref(null);
+const visibleAccountName = ref(null);
 
 const selFormatType = ref("png");
 
@@ -103,14 +103,14 @@ function loadCanvasFrame(id) {
             if (json.objects[i].visible == null) {
                 json.objects[i].visible = true;
             }
-            if (visibleBankTitle.value != json.objects[i].visible) {
-                visibleBankTitle.value = json.objects[i].visible;
+            if (visibleBankName.value != json.objects[i].visible) {
+                visibleBankName.value = json.objects[i].visible;
             }
             break;
         }
         if (i == json.objects.length - 1) {
-            if (visibleBankTitle.value != null) {
-                visibleBankTitle.value = null;
+            if (visibleBankName.value != null) {
+                visibleBankName.value = null;
             }
         }
     }
@@ -119,14 +119,14 @@ function loadCanvasFrame(id) {
             if (json.objects[i].visible == null) {
                 json.objects[i].visible = true;
             }
-            if (visibleAccountNoTitle.value != json.objects[i].visible) {
-                visibleAccountNoTitle.value = json.objects[i].visible;
+            if (visibleAccountNo.value != json.objects[i].visible) {
+                visibleAccountNo.value = json.objects[i].visible;
             }
             break;
         }
         if (i == json.objects.length - 1) {
-            if (visibleAccountNoTitle.value != null) {
-                visibleAccountNoTitle.value = null;
+            if (visibleAccountNo.value != null) {
+                visibleAccountNo.value = null;
             }
         }
     }
@@ -135,14 +135,14 @@ function loadCanvasFrame(id) {
             if (json.objects[i].visible == null) {
                 json.objects[i].visible = true;
             }
-            if (visibleAccountNameTitle.value != json.objects[i].visible) {
-                visibleAccountNameTitle.value = json.objects[i].visible;
+            if (visibleAccountName.value != json.objects[i].visible) {
+                visibleAccountName.value = json.objects[i].visible;
             }
             break;
         }
         if (i == json.objects.length - 1) {
-            if (visibleAccountNameTitle.value != null) {
-                visibleAccountNameTitle.value = null;
+            if (visibleAccountName.value != null) {
+                visibleAccountName.value = null;
             }
         }
     }
@@ -150,8 +150,17 @@ function loadCanvasFrame(id) {
     frameSelected.value = id;
 }
 
-watch(visibleBankTitle, (isVisible) => {
+watch(visibleBankIcon, (isVisible) => {
+    updateCanvasOjbect("bankIcon", "visible", isVisible);
+});
+watch(visibleBankName, (isVisible) => {
     updateCanvasOjbect("bankName", "visible", isVisible);
+});
+watch(visibleAccountNo, (isVisible) => {
+    updateCanvasOjbect("accountNo", "visible", isVisible);
+});
+watch(visibleAccountName, (isVisible) => {
+    updateCanvasOjbect("accountName", "visible", isVisible);
 });
 
 function onFileChange(e) {
@@ -228,23 +237,23 @@ async function shareImage() {
                 <input type="file" accept="image/*" @change="onFileChange" title="abc" class="w3-hide">
             </div>
             <div
-                v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNoTitle != null || visibleAccountNameTitle != null">
+                v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNo != null || visibleAccountName != null">
                 <h3>Ẩn/hiện thông tin tài khoản</h3>
                 <div v-if="visibleBankIcon != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleBankIcon">
-                    <label class="accept-label" for="ckbBankVisible">Bank icon</label>
+                    <input id="ckbBankIconVisible" class="w3-check" type="checkbox" v-model="visibleBankIcon">
+                    <label class="accept-label" for="ckbBankIconVisible">Bank icon</label>
                 </div>
-                <div v-if="visibleBankTitle != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleBankTitle">
-                    <label class="accept-label" for="ckbBankVisible">Bank title</label>
+                <div v-if="visibleBankName != null">
+                    <input id="ckbBankNameVisible" class="w3-check" type="checkbox" v-model="visibleBankName">
+                    <label class="accept-label" for="ckbBankNameVisible">Bank name</label>
                 </div>
-                <div v-if="visibleAccountNoTitle != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleAccountNoTitle">
-                    <label class="accept-label" for="ckbBankVisible">Account No title</label>
+                <div v-if="visibleAccountNo != null">
+                    <input id="visibleAccountNoVisible" class="w3-check" type="checkbox" v-model="visibleAccountNo">
+                    <label class="accept-label" for="visibleAccountNoVisible">Account No</label>
                 </div>
-                <div v-if="visibleAccountNameTitle != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleAccountNameTitle">
-                    <label class="accept-label" for="ckbBankVisible">Account Name title</label>
+                <div v-if="visibleAccountName != null">
+                    <input id="visibleAccountNameVisible" class="w3-check" type="checkbox" v-model="visibleAccountName">
+                    <label class="accept-label" for="visibleAccountNameVisible">Account Name</label>
                 </div>
             </div>
             <div>
