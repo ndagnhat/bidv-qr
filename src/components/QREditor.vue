@@ -9,10 +9,10 @@ const props = defineProps(['qrdata', 'bankIcon', 'bankName', 'accountNo', 'accou
 let canvas = null;
 const frameSelected = ref(null);
 
-const visibleBankIcon = ref(null);
-const visibleBankName = ref(null);
-const visibleAccountNo = ref(null);
-const visibleAccountName = ref(null);
+// const visibleBankIcon = ref(null);
+// const visibleBankName = ref(null);
+// const visibleAccountNo = ref(null);
+// const visibleAccountName = ref(null);
 
 const selFormatType = ref("png");
 
@@ -82,86 +82,86 @@ function loadCanvasFrame(id) {
         }
     }
 
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "bankIcon") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleBankIcon.value != json.objects[i].visible) {
-                visibleBankIcon.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleBankIcon.value != null) {
-                visibleBankIcon.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "bankName") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleBankName.value != json.objects[i].visible) {
-                visibleBankName.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleBankName.value != null) {
-                visibleBankName.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "accountNo") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleAccountNo.value != json.objects[i].visible) {
-                visibleAccountNo.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleAccountNo.value != null) {
-                visibleAccountNo.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "accountName") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleAccountName.value != json.objects[i].visible) {
-                visibleAccountName.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleAccountName.value != null) {
-                visibleAccountName.value = null;
-            }
-        }
-    }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "bankIcon") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleBankIcon.value != json.objects[i].visible) {
+    //             visibleBankIcon.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleBankIcon.value != null) {
+    //             visibleBankIcon.value = null;
+    //         }
+    //     }
+    // }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "bankName") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleBankName.value != json.objects[i].visible) {
+    //             visibleBankName.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleBankName.value != null) {
+    //             visibleBankName.value = null;
+    //         }
+    //     }
+    // }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "accountNo") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleAccountNo.value != json.objects[i].visible) {
+    //             visibleAccountNo.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleAccountNo.value != null) {
+    //             visibleAccountNo.value = null;
+    //         }
+    //     }
+    // }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "accountName") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleAccountName.value != json.objects[i].visible) {
+    //             visibleAccountName.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleAccountName.value != null) {
+    //             visibleAccountName.value = null;
+    //         }
+    //     }
+    // }
     loadCanvasFromJson(json);
     frameSelected.value = id;
 }
 
-watch(visibleBankIcon, (isVisible) => {
-    updateCanvasOjbect("bankIcon", "visible", isVisible);
-});
-watch(visibleBankName, (isVisible) => {
-    updateCanvasOjbect("bankName", "visible", isVisible);
-});
-watch(visibleAccountNo, (isVisible) => {
-    updateCanvasOjbect("accountNo", "visible", isVisible);
-});
-watch(visibleAccountName, (isVisible) => {
-    updateCanvasOjbect("accountName", "visible", isVisible);
-});
+// watch(visibleBankIcon, (isVisible) => {
+//     updateCanvasOjbect("bankIcon", "visible", isVisible);
+// });
+// watch(visibleBankName, (isVisible) => {
+//     updateCanvasOjbect("bankName", "visible", isVisible);
+// });
+// watch(visibleAccountNo, (isVisible) => {
+//     updateCanvasOjbect("accountNo", "visible", isVisible);
+// });
+// watch(visibleAccountName, (isVisible) => {
+//     updateCanvasOjbect("accountName", "visible", isVisible);
+// });
 
 function onFileChange(e) {
     var files = e.target.files || e.dataTransfer.files;
@@ -236,7 +236,7 @@ async function shareImage() {
                     </svg></div>
                 <input type="file" accept="image/*" @change="onFileChange" title="abc" class="w3-hide">
             </div>
-            <div
+            <!-- <div
                 v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNo != null || visibleAccountName != null">
                 <h3>Ẩn/hiện thông tin tài khoản</h3>
                 <div v-if="visibleBankIcon != null">
@@ -255,7 +255,7 @@ async function shareImage() {
                     <input id="visibleAccountNameVisible" class="w3-check" type="checkbox" v-model="visibleAccountName">
                     <label class="accept-label" for="visibleAccountNameVisible">Account Name</label>
                 </div>
-            </div>
+            </div> -->
             <div>
                 <h3>Định dạng file tải xuống</h3>
                 <select name="filte-type" v-model="selFormatType" class="w3-input w3-border w3-hover-border w3-round-large">
