@@ -18,7 +18,8 @@ function createQRData() {
     let data = {
         type: 'payment',
         qr: qrdata,
-        bank: bank.name,
+        bankIcon: bank.logo,
+        bankName: bank.name,
         accountNo: txtAccountNo.value,
         accountName: txtAccountName.value
     }

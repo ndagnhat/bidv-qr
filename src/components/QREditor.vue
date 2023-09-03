@@ -9,10 +9,10 @@ const props = defineProps(['qrdata', 'bankIcon', 'bankName', 'accountNo', 'accou
 let canvas = null;
 const frameSelected = ref(null);
 
-const visibleBankIcon = ref(null);
-const visibleBankTitle = ref(null);
-const visibleAccountNoTitle = ref(null);
-const visibleAccountNameTitle = ref(null);
+// const visibleBankIcon = ref(null);
+// const visibleBankName = ref(null);
+// const visibleAccountNo = ref(null);
+// const visibleAccountName = ref(null);
 
 const selFormatType = ref("png");
 
@@ -82,77 +82,86 @@ function loadCanvasFrame(id) {
         }
     }
 
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "bankIcon") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleBankIcon.value != json.objects[i].visible) {
-                visibleBankIcon.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleBankIcon.value != null) {
-                visibleBankIcon.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "bankName") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleBankTitle.value != json.objects[i].visible) {
-                visibleBankTitle.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleBankTitle.value != null) {
-                visibleBankTitle.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "accountNo") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleAccountNoTitle.value != json.objects[i].visible) {
-                visibleAccountNoTitle.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleAccountNoTitle.value != null) {
-                visibleAccountNoTitle.value = null;
-            }
-        }
-    }
-    for (var i = 0; i < json.objects.length; i++) {
-        if (json.objects[i].id === "accountName") {
-            if (json.objects[i].visible == null) {
-                json.objects[i].visible = true;
-            }
-            if (visibleAccountNameTitle.value != json.objects[i].visible) {
-                visibleAccountNameTitle.value = json.objects[i].visible;
-            }
-            break;
-        }
-        if (i == json.objects.length - 1) {
-            if (visibleAccountNameTitle.value != null) {
-                visibleAccountNameTitle.value = null;
-            }
-        }
-    }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "bankIcon") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleBankIcon.value != json.objects[i].visible) {
+    //             visibleBankIcon.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleBankIcon.value != null) {
+    //             visibleBankIcon.value = null;
+    //         }
+    //     }
+    // }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "bankName") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleBankName.value != json.objects[i].visible) {
+    //             visibleBankName.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleBankName.value != null) {
+    //             visibleBankName.value = null;
+    //         }
+    //     }
+    // }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "accountNo") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleAccountNo.value != json.objects[i].visible) {
+    //             visibleAccountNo.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleAccountNo.value != null) {
+    //             visibleAccountNo.value = null;
+    //         }
+    //     }
+    // }
+    // for (var i = 0; i < json.objects.length; i++) {
+    //     if (json.objects[i].id === "accountName") {
+    //         if (json.objects[i].visible == null) {
+    //             json.objects[i].visible = true;
+    //         }
+    //         if (visibleAccountName.value != json.objects[i].visible) {
+    //             visibleAccountName.value = json.objects[i].visible;
+    //         }
+    //         break;
+    //     }
+    //     if (i == json.objects.length - 1) {
+    //         if (visibleAccountName.value != null) {
+    //             visibleAccountName.value = null;
+    //         }
+    //     }
+    // }
     loadCanvasFromJson(json);
     frameSelected.value = id;
 }
 
-watch(visibleBankTitle, (isVisible) => {
-    updateCanvasOjbect("bankName", "visible", isVisible);
-});
+// watch(visibleBankIcon, (isVisible) => {
+//     updateCanvasOjbect("bankIcon", "visible", isVisible);
+// });
+// watch(visibleBankName, (isVisible) => {
+//     updateCanvasOjbect("bankName", "visible", isVisible);
+// });
+// watch(visibleAccountNo, (isVisible) => {
+//     updateCanvasOjbect("accountNo", "visible", isVisible);
+// });
+// watch(visibleAccountName, (isVisible) => {
+//     updateCanvasOjbect("accountName", "visible", isVisible);
+// });
 
 function onFileChange(e) {
     var files = e.target.files || e.dataTransfer.files;
@@ -169,12 +178,40 @@ function onFileChange(e) {
 }
 
 function downloadAsFile() {
-    const link = document.createElement('a')
-    link.href = canvas.toDataURL({ format: 'pgn', multiplier: (1 / canvas.getZoom()) })
-    link.download = 'qrcode.png'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    if (selFormatType.value == 'json') {
+        const link = document.createElement('a')
+        link.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(canvas.toDatalessJSON(["id", "canvasWidth", "canvasHeight", "selectable"])));
+        link.download = 'style.json';
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    } else {
+        const link = document.createElement('a')
+        link.href = canvas.toDataURL({ format: selFormatType.value, multiplier: (1 / canvas.getZoom()) })
+        link.download = 'qrcode.' + selFormatType.value;
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+}
+
+async function shareImage() {
+    const response = await fetch(canvas.toDataURL({ format: selFormatType.value, multiplier: (1 / canvas.getZoom()) }));
+    const blob = await response.blob();
+    const filesArray = [
+        new File(
+            [blob],
+            'qrcode.' + selFormatType.value,
+            {
+                type: "image/" + selFormatType.value,
+                lastModified: new Date().getTime()
+            }
+        )
+    ];
+    const shareData = {
+        files: filesArray,
+    };
+    navigator.share(shareData);
 }
 
 </script>
@@ -199,35 +236,38 @@ function downloadAsFile() {
                     </svg></div>
                 <input type="file" accept="image/*" @change="onFileChange" title="abc" class="w3-hide">
             </div>
-            <div v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNoTitle != null || visibleAccountNameTitle != null">
+            <!-- <div
+                v-if="visibleBankIcon != null || isibleBankTitle != null || visibleAccountNo != null || visibleAccountName != null">
                 <h3>Ẩn/hiện thông tin tài khoản</h3>
                 <div v-if="visibleBankIcon != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleBankIcon">
-                    <label class="accept-label" for="ckbBankVisible">Bank icon</label>
+                    <input id="ckbBankIconVisible" class="w3-check" type="checkbox" v-model="visibleBankIcon">
+                    <label class="accept-label" for="ckbBankIconVisible">Bank icon</label>
                 </div>
-                <div v-if="visibleBankTitle != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleBankTitle">
-                    <label class="accept-label" for="ckbBankVisible">Bank title</label>
+                <div v-if="visibleBankName != null">
+                    <input id="ckbBankNameVisible" class="w3-check" type="checkbox" v-model="visibleBankName">
+                    <label class="accept-label" for="ckbBankNameVisible">Bank name</label>
                 </div>
-                <div v-if="visibleAccountNoTitle != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleAccountNoTitle">
-                    <label class="accept-label" for="ckbBankVisible">Account No title</label>
+                <div v-if="visibleAccountNo != null">
+                    <input id="visibleAccountNoVisible" class="w3-check" type="checkbox" v-model="visibleAccountNo">
+                    <label class="accept-label" for="visibleAccountNoVisible">Account No</label>
                 </div>
-                <div v-if="visibleAccountNameTitle != null">
-                    <input id="ckbBankVisible" class="w3-check" type="checkbox" v-model="visibleAccountNameTitle">
-                    <label class="accept-label" for="ckbBankVisible">Account Name title</label>
+                <div v-if="visibleAccountName != null">
+                    <input id="visibleAccountNameVisible" class="w3-check" type="checkbox" v-model="visibleAccountName">
+                    <label class="accept-label" for="visibleAccountNameVisible">Account Name</label>
                 </div>
-            </div>
+            </div> -->
             <div>
                 <h3>Định dạng file tải xuống</h3>
                 <select name="filte-type" v-model="selFormatType" class="w3-input w3-border w3-hover-border w3-round-large">
                     <option value="png"> PNG </option>
                     <option value="jpg"> JPG </option>
                     <option value="svg"> SVG </option>
+                    <option value="json"> JSON </option>
                 </select>
             </div>
             <div style="margin-top: 32px;">
                 <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="downloadAsFile">Download</button>
+                <button class="w3-btn w3-large w3-round-xxlarge w3-brand" @click="shareImage" style="margin-left: 15px;">Share</button>
             </div>
         </div>
         <div class="qrview w3-round-xlarge">
@@ -243,6 +283,7 @@ function downloadAsFile() {
     display: grid;
     padding: 10px 16px;
 }
+
 .qrtool {
     grid-column: 1;
     grid-row: 2;
@@ -260,7 +301,8 @@ function downloadAsFile() {
     .container {
         grid-template-columns: 3fr 7fr;
         gap: 16px;
-        }
+    }
+
     .qrtool {
         grid-column: 1;
         grid-row: 1;
@@ -318,4 +360,5 @@ function downloadAsFile() {
 
 .thumbnail.active {
     box-shadow: 0 0 2px 2px var(--vp-c-brand);
-}</style>
+}
+</style>
